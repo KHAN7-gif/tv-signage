@@ -81,3 +81,15 @@ npm test
 ```
 
 Test mencakup validasi playlist, proteksi perubahan admin, penyimpanan dan pembacaan konfigurasi, penolakan upload, serta respons byte-range. Uji perangkat asli dan deploy R2 memerlukan akun Cloudflare dan TV pengguna.
+
+## Pratonton UI tanpa Cloudflare
+
+Jalankan server statik dari folder projek:
+
+```sh
+python3 -m http.server 8080 --directory public
+```
+
+Buka `http://localhost:8080/admin.html?demo=1` untuk studio demo atau `http://localhost:8080/index.html?demo=1` untuk pemutar. Contoh media SVG disertakan. Upload demo disimpan dalam IndexedDB pelayar, bukan cloud. Pratonton terbenam menunjukkan playlist selepas disimpan. Data demo hanya dikongsi antara tab dengan origin dan pelayar yang sama; iPhone dan TV tidak disegerakkan. Mod demo tidak memerlukan kata laluan dan tidak menyediakan akses cloud. Menghapus data pelayar akan membuang demo. Guna localhost atau HTTPS untuk sokongan API pelayar.
+
+UI ini belum diterbitkan ke GitHub Pages atau Cloudflare.
