@@ -1,3 +1,5 @@
+let endpoint='';
+window.addEventListener('signage-config',e=>{const next=e.detail.bookingStatusUrl||'';if(endpoint!==next){endpoint=next;poll()}});
 const root = document.getElementById('booking-stations');
 const sync = document.getElementById('booking-sync');
 let snapshot = null, received = 0;
@@ -22,7 +24,9 @@ function render() {
 }
 async function poll() {
   try {
-    const response = await fetch('/api/bookings', {cache:'no-store',signal:AbortSignal.timeout(9000)});
+    if(!endpoint) return unavailable('URL status booking belum dikonfigurasi');
+    const url=new URL(endpoint);if(url.protocol!=='https:')throw Error();
+    const response = await fetch(url, {cache:'no-store',signal:AbortSignal.timeout(9000)});
     if (!response.ok) throw Error();
     const data = await response.json();
     if (!Array.isArray(data.stations)) throw Error();

@@ -1,111 +1,49 @@
-# TV Signage
+# Maida Legacy TV Signage — GitHub Pages
 
-Aplikasi digital signage untuk Google TV dengan admin melalui Safari di iPhone. Kod disimpan di GitHub; aplikasi berjalan di Cloudflare Workers dan foto/video serta playlist disimpan di Cloudflare R2.
+Media, playlist dan tetapan disimpan dalam repo **KHAN7-gif/tv-signage**. Paparan 16:9, 9:16, teks berjalan, panel admin iPhone, dan status PS Booking terus daripada **https://apps.maidaesports.my**. Tiada Cloudflare atau R2 diperlukan.
 
-## Ciri versi awal
+## Terbitkan
 
-- Layar landscape utama, portrait sebelah kanan, teks berjalan seperti referensi.
-- Upload JPG, PNG, WebP, MP4, WebM, maksimum 50 MB/file.
-- Dua playlist terpisah, ubah urutan dan keluarkan media dari playlist.
-- Kata sandi admin; TV membaca perubahan setiap 15 saat.
-- Video tanpa suara untuk autoplay, foto berganti sesuai durasi.
-- Sokongan HTTP Range untuk video. Satu konfigurasi bersama untuk semua TV.
+1. Gabungkan perubahan ini ke `main`.
+2. GitHub repo → Settings → Pages → Source: **GitHub Actions**.
+3. Jalankan workflow **Deploy GitHub Pages** jika belum berjalan.
+4. TV: https://khan7-gif.github.io/tv-signage/
+5. Admin: https://khan7-gif.github.io/tv-signage/admin.html
 
-## Mulakan di komputer
+URL di atas ialah alamat sasaran; workflow mesti berjaya sebelum ia tersedia. Repo ini awam, jadi semua media dan playlist juga awam.
 
-Pasang Node.js 22 atau lebih baru, lalu jalankan:
+## Simpan dari admin
 
-```sh
-npm install
-cp .dev.vars.example .dev.vars
+Cipta GitHub **fine-grained personal access token** dengan akses hanya repo `tv-signage` dan permission **Contents: Read and write**. Masukkan ke panel admin dan tekan **Sambung GitHub sebelum mengedit**. Token kekal dalam memori tab; tidak disimpan dalam localStorage, config atau repo. Masukkan hanya pada halaman admin milik anda.
+
+Upload JPG, PNG, WebP, MP4 atau WebM (maksimum **20 MB/fail**). Setiap upload ialah commit media di `public/media/`. Susun playlist, tetapkan teks dan durasi, kemudian **Simpan & siarkan** untuk commit `public/config.json`. Mengeluarkan media daripada playlist tidak memadam fail/histori Git. Elakkan video panjang atau upload kerap kerana saiz sejarah repo bertambah; GitHub Pages mempunyai had saiz/bandwidth dan bukan storan video berskala besar.
+
+TV membaca config dan media daripada branch `main` melalui raw GitHub. Semakan playlist setiap 15 saat, tetapi cache GitHub boleh melambatkan perubahan beberapa minit. Konflik semasa admin lain menyimpan akan ditolak; muat semula sebelum mengedit semula. Jangan edit tanpa menyambungkan GitHub dahulu.
+
+## Status langsung Maida Legacy
+
+TV membaca `https://apps.maidaesports.my/display-api/status` setiap 5 saat. Ini sambungan terus ke hosting Maida Legacy, bukan storan Cloudflare dan bukan status manual dalam GitHub. Status pelanggan/tempahan kekal dalam MySQL Maida Legacy; GitHub hanya menyimpan media dan tetapan signage.
+
+Laluan status belum tersedia pada hosting ketika semakan. Untuk mengaktifkannya di repo **KHAN7-gif/maidalegacy**:
+
+1. Salin `integrations/maidalegacy/display-status.cjs` ke `server/display-status.cjs`.
+2. Dalam `server/index.js`, sebelum middleware `/api`, tambah:
+
+```js
+app.use('/display-api', apiRateLimit, require('./display-status.cjs'));
 ```
 
-Ubah `ADMIN_TOKEN` dalam `.dev.vars` menjadi kata sandi acak sekurang-kurangnya 16 karakter. Jangan unggah file `.dev.vars` ke GitHub.
+3. Deploy semula aplikasi Maida Legacy di hosting sedia ada.
+
+Endpoint awam ini hanya mendedahkan ID/nama/jenis station dan masa tamat sesi. Tiada nama pelanggan, bayaran atau kunci API. CORS dibenarkan untuk `https://khan7-gif.github.io`. Station tidak aktif dikecualikan. Booking mesti berstatus `a`, sudah bermula dan belum tamat. Apabila sambungan gagal, TV memaparkan status tidak tersedia, bukan semua konsol kosong.
+
+## Development dan semakan
 
 ```sh
 npm run dev
-```
-
-Wrangler menyediakan R2 lokal untuk development. Buka URL lokal yang tertera, dan `/admin.html` untuk admin. Penyimpanan lokal terpisah dari Cloudflare produksi.
-
-## GitHub dahulu
-
-1. Di GitHub buat repositori baru bernama `tv-signage` (private disarankan), tanpa README otomatis.
-2. Upload seluruh isi folder proyek ini melalui **Add file → Upload files**, atau gunakan Git di komputer:
-
-```sh
-git init
-git add .
-git commit -m "Build TV signage with Cloudflare R2"
-git branch -M main
-git remote add origin https://github.com/USERNAME/tv-signage.git
-git push -u origin main
-```
-
-GitHub menyimpan kod sumber. GitHub Pages tidak menjalankan backend R2 atau admin aplikasi ini. Deploy ke Cloudflare untuk penggunaan sebenar.
-
-## Pasang di Cloudflare
-
-Aktifkan R2 dalam akun Cloudflare terlebih dahulu (akun mungkin meminta billing).
-
-```sh
-npx wrangler login
-npx wrangler r2 bucket create tv-signage-media
-npx wrangler secret put ADMIN_TOKEN
-npm run deploy
-```
-
-Masukkan kata sandi acak minimal 16 karakter saat diminta. Tidak perlu meletakkan credential Cloudflare dalam kod. Nama bucket harus sesuai dengan `wrangler.jsonc`; jika bucket sudah ada, gunakan bucket tersebut dan lewati perintah create. Perintah deploy menampilkan alamat `https://tv-signage.<subdomain>.workers.dev`.
-
-## Gunakan di iPhone
-
-Buka `https://ALAMAT-APLIKASI/admin.html` di Safari. Masukkan kata sandi admin, upload media ke area yang dipilih, atur urutan dan teks, lalu tekan **Simpan & siarkan**. Upload sahaja belum mengubah playlist TV. Jika Safari tidak mengenali format video, gunakan MP4 H.264. HEIC dan MOV perlu dikonversi terlebih dahulu.
-
-## Gunakan di Google TV
-
-Pasang browser yang tersedia untuk model Google TV anda dan mendukung video HTML5, lalu buka alamat aplikasi. Tekan **Mulakan layar penuh** menggunakan remote. Jika TV tidak mempunyai browser yang sesuai, perlu aplikasi Android TV/WebView khusus; versi ini adalah aplikasi web dan bukan APK. Coba pada model TV sebenar untuk memastikan autoplay, fullscreen, dan remote berfungsi. Pengaturan tidur/screensaver TV perlu disesuaikan untuk operasi berterusan.
-
-## Batas versi awal
-
-- Playlist dan URL media dapat dibaca publik; gunakan untuk konten publik, bukan dokumen rahasia. Hanya perubahan dan upload memerlukan kata sandi.
-- Jangan bagikan kata sandi admin. Kata sandi hanya berada di memori tab, dan diminta kembali setelah reload.
-- Mengeluarkan media dari playlist tidak menghapus objek R2. Hapus file yang tidak digunakan melalui dashboard Cloudflare untuk mengendalikan penggunaan storage.
-- Jaringan diperlukan. Saat koneksi terputus, pemutar mencoba kembali dan mempertahankan playlist aktif; tidak menjamin pemutaran offline setelah reload atau jika file belum dimuat.
-- Belum termasuk jadwal kalender, pengelolaan banyak layar, APK, atau sinkronisasi Google Drive.
-- Jika dua admin menyimpan bersamaan, penyimpanan terakhir berlaku.
-
-## Verifikasi
-
-```sh
 npm test
 ```
 
-Test mencakup validasi playlist, proteksi perubahan admin, penyimpanan dan pembacaan konfigurasi, penolakan upload, serta respons byte-range. Uji perangkat asli dan deploy R2 memerlukan akun Cloudflare dan TV pengguna.
+Pratonton statik: http://localhost:8080 . Untuk cuba upload tanpa menulis GitHub, gunakan `/admin.html?demo=1`; demo kekal pada pelayar ini sahaja. Status produksi pada localhost disekat CORS; gunakan domain GitHub Pages untuk sambungan sebenar.
 
-## Pratonton UI tanpa Cloudflare
-
-Jalankan server statik dari folder projek:
-
-```sh
-python3 -m http.server 8080 --directory public
-```
-
-Buka `http://localhost:8080/admin.html?demo=1` untuk studio demo atau `http://localhost:8080/index.html?demo=1` untuk pemutar. Contoh media SVG disertakan. Upload demo disimpan dalam IndexedDB pelayar, bukan cloud. Pratonton terbenam menunjukkan playlist selepas disimpan. Data demo hanya dikongsi antara tab dengan origin dan pelayar yang sama; iPhone dan TV tidak disegerakkan. Mod demo tidak memerlukan kata laluan dan tidak menyediakan akses cloud. Menghapus data pelayar akan membuang demo. Guna localhost atau HTTPS untuk sokongan API pelayar.
-
-UI ini belum diterbitkan ke GitHub Pages atau Cloudflare.
-
-## Status kekosongan PS Booking (Maida Legacy)
-
-Repo aplikasi booking: https://github.com/KHAN7-gif/maidalegacy . GitHub hanya menyimpan kod; status sebenar dibaca daripada backend aplikasi yang telah dihoskan.
-
-Tetapkan `BOOKING_BASE_URL` kepada origin HTTPS aplikasi Maida Legacy dalam Cloudflare Worker Variables. Simpan `BOOKING_API_KEY` sebagai **secret**, sepadan dengan `API_SHARED_KEY` pada backend Maida Legacy:
-
-```sh
-npx wrangler secret put BOOKING_API_KEY
-```
-
-Untuk development, isi kedua-dua nilai dalam `.dev.vars`. Jangan commit fail itu. Deploy semula Worker selepas konfigurasi. Tiada perubahan diperlukan pada repo Maida Legacy: Worker membaca GET `/api/ps_stations` dan `/api/ps` dengan header `X-API-Key`. Panggilan dibuat dari pelayan, jadi tidak memerlukan CORS dan kunci tidak dihantar ke TV.
-
-Player membaca `/api/bookings` setiap 5 saat dan memaparkan station aktif, kosong/bermain serta baki masa. Sesi aktif mesti berstatus `a` dan masa semasa berada antara `st` dan `et`, mengikut overlay dalam aplikasi booking. Laluan awam ini hanya memulangkan ID/nama/jenis station dan masa tamat; tiada data pelanggan atau pembayaran. Respons tidak dicache. Jika backend gagal atau tetapan belum lengkap, player menunjukkan status tidak tersedia, bukannya menganggap semua konsol kosong. Mod demo tidak mereka-reka status konsol.
-
-Sambungan produksi memerlukan URL hosting Maida Legacy dan secret Cloudflare. Pengesahan pada TV sebenar masih diperlukan.
+Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV sebenar dan sambungan MySQL produksi masih diperlukan. Workflow Pages memerlukan Pages diaktifkan pada repo.

@@ -1,5 +1,6 @@
+import {readConfig,configVersion,saveConfig,uploadMedia} from './github.js';
 import {isDemo,readDemo,saveDemo,uploadDemo,mediaSource} from './demo.js';
-let config, busy=false, dirty=false;
+let config, sha, busy=false, dirty=false;
 const $=id=>document.getElementById(id);
 const playerURL=`./index.html${isDemo?'?demo=1':''}`;
 $('tv-link').href=playerURL;
@@ -10,7 +11,7 @@ function changed(){dirty=true;$('save-status').textContent='Belum disimpan';$('s
 function updateText(){const text=$('text').value;$('char-count').textContent=`${text.length} / 2000`;$('ticker-sample').textContent=text||'Teks anda akan dipaparkan di sini'}
 $('text').oninput=()=>{updateText();changed()};$('duration').oninput=changed;
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue=''}});
-async function api(path,options={}){const res=await fetch(path,{...options,headers:{Authorization:`Bearer ${$('password').value}`,...options.headers}});const data=await res.json();if(!res.ok)throw Error(data.error||'Permintaan gagal');return data}
+$('connect').onclick=async()=>{try{if(dirty)throw Error('Muat semula dan sambung GitHub sebelum mengedit playlist.');const snapshot=await configVersion($('password').value);sha=snapshot.sha;config=snapshot.config;$('text').value=config.ticker;$('duration').value=config.duration;updateText();for(const slot of ['landscape','portrait'])render(slot);$('connect').disabled=true;$('password').readOnly=true;notice('GitHub disambungkan. Muat semula halaman untuk menukar token.')}catch(e){notice(e.message)}};
 function render(slot){
  const list=$(slot+'-list');list.replaceChildren();$(slot+'-count').textContent=config[slot].length;
  $('media-count').replaceChildren(document.createTextNode(String(config.landscape.length+config.portrait.length)));const unit=document.createElement('small');unit.textContent='fail';$('media-count').append(unit);
@@ -25,13 +26,13 @@ function render(slot){
 function setBusy(value){busy=value;$('save').disabled=value||!config;document.querySelectorAll('[type=file]').forEach(input=>input.disabled=value||!config);if(config)for(const slot of ['landscape','portrait'])render(slot)}
 for(const slot of ['landscape','portrait'])$(slot+'-upload').onchange=async event=>{
  if(!config||busy)return;
- if(!isDemo&&!$('password').value){notice('Masukkan kata laluan admin terlebih dahulu.');event.target.value='';return}
+ if(!isDemo&&!sha){notice('Masukkan token GitHub dan tekan Sambung dahulu.');event.target.value='';return}
  setBusy(true);
- try{for(const file of event.target.files){if(config[slot].length>=100)throw Error('Maksimum 100 media setiap area.');if(!['image/jpeg','image/png','image/webp','video/mp4','video/webm'].includes(file.type))throw Error(`${file.name}: format tidak disokong. Gunakan JPG, PNG, WebP, MP4 atau WebM.`);if(file.size>50*1024*1024)throw Error(`${file.name}: melebihi 50 MB.`);notice(`Menambah ${file.name}…`);const media=isDemo?await uploadDemo(file):await api('/api/upload',{method:'POST',headers:{'Content-Type':file.type},body:file});config[slot].push({...media,name:file.name.slice(0,200)});changed()}notice('Media ditambah. Simpan untuk mengemas kini pratonton.')}catch(error){notice(error.message)}finally{setBusy(false);event.target.value=''}
+ try{for(const file of event.target.files){if(config[slot].length>=100)throw Error('Maksimum 100 media setiap area.');if(!['image/jpeg','image/png','image/webp','video/mp4','video/webm'].includes(file.type))throw Error(`${file.name}: format tidak disokong. Gunakan JPG, PNG, WebP, MP4 atau WebM.`);if(file.size>20*1024*1024)throw Error(`${file.name}: melebihi 20 MB.`);notice(`Menambah ${file.name}…`);const media=isDemo?await uploadDemo(file):await uploadMedia(file,$('password').value);config[slot].push({...media,name:file.name.slice(0,200)});changed()}notice('Media ditambah. Simpan untuk mengemas kini pratonton.')}catch(error){notice(error.message)}finally{setBusy(false);event.target.value=''}
 };
 $('save').onclick=async()=>{
  if(!config||busy)return;const duration=Number($('duration').value);if(!Number.isInteger(duration)||duration<3||duration>300){notice('Durasi foto mestilah antara 3 hingga 300 saat.');$('duration').focus();return}
  setBusy(true);
- try{config.ticker=$('text').value;config.duration=duration;if(isDemo)await saveDemo(config);else await api('/api/config',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(config)});dirty=false;$('save-status').textContent='Semua disimpan';$('save-caption').textContent=isDemo?'Demo telah disimpan':'Playlist telah disiarkan';$('preview').src=playerURL+(isDemo?'&':'?')+'embed=1';notice(isDemo?'Demo disimpan dalam pelayar ini. Pratonton telah dikemas kini.':'Tersimpan. TV menerima perubahan dalam 15 saat.')}catch(error){notice(error.message)}finally{setBusy(false)}
+ try{config.ticker=$('text').value;config.duration=duration;if(isDemo)await saveDemo(config);else sha=await saveConfig(config,$('password').value,sha);dirty=false;$('save-status').textContent='Semua disimpan';$('save-caption').textContent=isDemo?'Demo telah disimpan':'Playlist telah disiarkan';$('preview').src=playerURL+(isDemo?'&':'?')+'embed=1';notice(isDemo?'Demo disimpan dalam pelayar ini. Pratonton telah dikemas kini.':'Disimpan di GitHub. TV menerima perubahan selepas cache GitHub dikemas kini, biasanya beberapa minit.')}catch(error){notice(error.message)}finally{setBusy(false)}
 };
-(async()=>{setBusy(true);try{config=isDemo?await readDemo():await api('/api/config');$('text').value=config.ticker;$('duration').value=config.duration;updateText();$('save-status').textContent='Semua disimpan'}catch{notice('Sambungan cloud belum tersedia. Pilih “Cuba demo UI” untuk meneruskan tanpa Cloudflare.');$('save-status').textContent='Belum tersambung'}finally{setBusy(false)}})();
+(async()=>{setBusy(true);try{config=isDemo?await readDemo():await readConfig();$('text').value=config.ticker;$('duration').value=config.duration;updateText();$('save-status').textContent='Semua disimpan'}catch{notice('Konfigurasi GitHub belum tersedia. Pastikan perubahan sudah digabungkan ke main.');$('save-status').textContent='Belum tersambung'}finally{setBusy(false)}})();

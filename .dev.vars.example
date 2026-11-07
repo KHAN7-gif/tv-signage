@@ -1,4 +1,0 @@
-ADMIN_TOKEN=replace-with-a-long-random-password
-# Origin aplikasi Maida Legacy (HTTPS), bukan pautan GitHub
-BOOKING_BASE_URL=https://your-maida-app.example.com
-BOOKING_API_KEY=replace-with-the-existing-api-shared-key
