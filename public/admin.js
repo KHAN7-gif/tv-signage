@@ -1,5 +1,4 @@
-import {encryptToken,decryptToken,hasStoredAccess,readStoredAccess,storeAccess,forgetAccess} from './admin-vault.js?v=password-1';
-import {readConfig,configVersion,saveConfig} from './github.js?v=password-1';
+import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
 import {validateConfig} from './media-links.js?v=playlist-1';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
@@ -23,39 +22,22 @@ function populate(config){state=config;render('videos');render('images');$('tick
 for(const [button,kind] of [['add-video','videos'],['add-image','images']])$(button).onclick=()=>{if(!sha||busy||state[kind].length>=100)return;state[kind].push(kind==='videos'?{url:''}:{url:'',duration:10});changed();render(kind,state[kind].length-1)};
 $('ticker').oninput=()=>{state.ticker=$('ticker').value;changed();$('counter').textContent=`${state.ticker.length} / 2000`};
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
-function authView(mode){for(const name of ['setup','login','unlocked'])$('auth-'+name).hidden=name!==mode;}
-function clearPasswords(){for(const id of ['setup-token','new-password','confirm-password','login-password'])$(id).value='';}
-function authBusy(value){for(const id of ['setup-submit','login-submit','reset-access','setup-token','new-password','confirm-password','login-password'])$(id).disabled=value;}
-function friendlyError(error){if(error.status===401)return 'Token GitHub tidak sah atau telah tamat tempoh. Tetapkan semula akses dengan token baharu.';if(error.status===403)return 'GitHub menolak akses. Semak permission Contents: Read and write pada token atau tetapkan semula akses.';return error.message;}
-function unlock(token,snapshot){const config=validateConfig(snapshot.config);activeToken=token;sha=snapshot.sha;populate(config);$('fields').disabled=false;$('save').disabled=false;clearPasswords();authView('unlocked');$('save-status').textContent='Admin dibuka';notice('Sedia mengedit. Tekan Simpan & siarkan selepas membuat perubahan.');}
-function lock(){
+// Remove the retired encrypted credential only; leave media settings and other browser data alone.
+try{localStorage.removeItem('maida-signage:KHAN7-gif/tv-signage:admin-vault:v1')}catch{}
+function friendlyError(error){if(error.status===401)return 'Token GitHub tidak sah atau telah tamat tempoh. Gunakan token baharu.';if(error.status===403)return 'GitHub menolak akses. Semak permission Contents: Read and write untuk repo tv-signage.';return error.message;}
+function connection(connected){$('token').readOnly=connected;$('connect').disabled=connected;$('disconnect').hidden=!connected;$('token').placeholder=connected?'GitHub disambungkan untuk sesi ini':'Fine-grained personal access token';$('token-status').textContent=connected?'Sambungan aktif. Token hanya dalam memori tab sehingga halaman dimuat semula atau sambungan diputuskan.':'Token hanya digunakan dalam memori tab ini. Hadkan akses kepada repo tv-signage dengan Contents: Read and write.';}
+$('token-form').onsubmit=async e=>{
+ e.preventDefault();if(busy||activeToken)return;
+ const token=$('token').value.trim();if(!token){notice('Masukkan token GitHub.');return;}
+ busy=true;$('connect').disabled=true;$('token').disabled=true;
+ try{const snapshot=await configVersion(token);const config=validateConfig(snapshot.config);activeToken=token;sha=snapshot.sha;populate(config);$('token').value='';connection(true);$('fields').disabled=false;$('save').disabled=false;$('save-status').textContent='GitHub disambungkan';notice('Tambah, edit atau padam pautan, kemudian tekan Simpan & siarkan.');}
+ catch(error){notice(friendlyError(error));$('connect').disabled=false;}
+ finally{busy=false;$('token').disabled=false;}
+};
+$('disconnect').onclick=()=>{
  if(busy)return;
- if(dirty&&!confirm('Perubahan belum disimpan akan dibuang daripada panel ini. Kunci admin?'))return;
- activeToken='';sha=undefined;dirty=false;$('fields').disabled=true;$('save').disabled=true;clearPasswords();authView(hasStoredAccess()?'login':'setup');$('save-status').textContent='Log masuk untuk mengedit';notice('Admin dikunci.');
-}
-$('setup-form').onsubmit=async e=>{
- e.preventDefault();if(busy)return;
- if($('new-password').value!==$('confirm-password').value){notice('Kata laluan tidak sepadan.');return;}
- busy=true;authBusy(true);
- try{
-  const token=$('setup-token').value.trim(),password=$('new-password').value;
-  const snapshot=await configVersion(token);validateConfig(snapshot.config);
-  const encrypted=await encryptToken(token,password);storeAccess(encrypted);unlock(token,snapshot);
- }catch(error){notice(friendlyError(error));$('new-password').value='';$('confirm-password').value='';}
- finally{busy=false;authBusy(false);}
+ if(dirty&&!confirm('Perubahan belum disimpan akan dibuang daripada panel ini. Putuskan sambungan?'))return;
+ activeToken='';sha=undefined;dirty=false;$('token').value='';connection(false);$('fields').disabled=true;$('save').disabled=true;$('save-status').textContent='Sambungkan GitHub untuk mengedit';notice('Sambungan diputuskan. Media yang telah disimpan dikekalkan.');$('token').focus();
 };
-$('login-form').onsubmit=async e=>{
- e.preventDefault();if(busy)return;busy=true;authBusy(true);
- try{const token=await decryptToken(readStoredAccess(),$('login-password').value);const snapshot=await configVersion(token);unlock(token,snapshot)}
- catch(error){notice(friendlyError(error));$('login-password').value='';$('login-password').focus();}
- finally{busy=false;authBusy(false);}
-};
-$('lock-admin').onclick=lock;
-$('reset-access').onclick=()=>{
- if(busy||!confirm('Padam akses tersimpan pada pelayar ini? Anda perlu token GitHub sekali lagi untuk menetapkan kata laluan baharu. Senarai media tidak dipadam.'))return;
- try{forgetAccess();activeToken='';sha=undefined;dirty=false;clearPasswords();$('fields').disabled=true;$('save').disabled=true;authView('setup');$('save-status').textContent='Buat persediaan akses admin';notice('Akses setempat dipadam. Media dan tetapan GitHub dikekalkan.');}
- catch{notice('Akses setempat tidak dapat dipadam pada pelayar ini.');}
-};
-try{authView(hasStoredAccess()?'login':'setup')}catch{authView('setup');notice('Benarkan storan pelayar untuk menyimpan akses admin.');}
 $('settings').onsubmit=async e=>{e.preventDefault();if(!sha||busy)return;let config;try{config=validateConfig(state)}catch(error){notice(error.message);return}busy=true;$('save').disabled=true;$('fields').disabled=true;try{sha=await saveConfig(config,activeToken,sha);populate(config);dirty=false;$('save-status').textContent='Semua disimpan';notice('Senarai disimpan di GitHub. TV dikemas kini selepas cache GitHub diperbaharui.');$('preview').src=`./index.html?embed=1&refresh=${Date.now()}`}catch(error){notice(friendlyError(error))}finally{busy=false;$('fields').disabled=false;$('save').disabled=false}};
-readConfig().then(config=>{if(!sha){populate(validateConfig(config));$('save-status').textContent='Log masuk admin untuk mengedit'}}).catch(()=>{if(!sha)$('save-status').textContent='Log masuk admin untuk memuatkan tetapan'});
+readConfig().then(config=>{if(!sha){populate(validateConfig(config));$('save-status').textContent='Sambungkan GitHub untuk mengedit'}}).catch(()=>{if(!sha)$('save-status').textContent='Sambungkan GitHub untuk memuatkan tetapan'});

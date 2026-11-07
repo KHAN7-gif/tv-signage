@@ -10,17 +10,15 @@ TV: https://khan7-gif.github.io/tv-signage/
 
 Admin: https://khan7-gif.github.io/tv-signage/admin.html
 
-## Log masuk admin dengan kata laluan
+## Sambungan admin dengan token GitHub
 
-Pada **persediaan pertama sahaja bagi setiap pelayar/peranti**, masukkan token GitHub fine-grained untuk repo `KHAN7-gif/tv-signage` (Contents: Read and write), cipta kata laluan sekurang-kurangnya 10 aksara dan sahkan kata laluan. Tekan **Simpan akses & masuk**.
+Masukkan GitHub fine-grained personal access token untuk repo `KHAN7-gif/tv-signage` dengan permission **Contents: Read and write**, kemudian tekan **Sambung GitHub**. Tiada persediaan atau log masuk kata laluan.
 
-Untuk lawatan seterusnya pada pelayar yang sama, masukkan **kata laluan sahaja**. Token disimpan dalam localStorage sebagai ciphertext AES-256-GCM; kunci diperoleh daripada kata laluan melalui PBKDF2-SHA256 dengan salt rawak dan 600,000 iterasi. Kata laluan tidak disimpan atau dihantar ke GitHub. Token yang dibuka hanya digunakan dalam memori sesi dan dihantar kepada GitHub API untuk perubahan repo; ia tidak dimasukkan ke config atau repo awam.
-
-Kata laluan ini membuka akses setempat, bukan akaun/server log masuk bersama. Pelayar/peranti baharu, mod peribadi atau pembersihan data pelayar memerlukan persediaan token sekali lagi. Gunakan Safari/Chrome biasa untuk mengekalkan akses. Token yang tamat tempoh atau dibatalkan perlu diganti melalui **Lupa kata laluan / tukar token**. Menetapkan semula akses hanya memadam ciphertext pada pelayar itu; media di GitHub tidak dipadam. Gunakan **Kunci admin** untuk menamatkan sesi mengedit.
+Token hanya berada dalam memori tab untuk sesi semasa. Token tidak disimpan dalam localStorage, config atau repo. Muat semula halaman memerlukan token dimasukkan semula; gunakan **Putus sambungan** untuk mengosongkan token daripada sesi. Akses tersulit daripada versi lama dibuang secara automatik apabila panel baharu dibuka, tanpa memadam senarai media.
 
 ## Tambah dan kemas kini media
 
-1. Log masuk dengan kata laluan.
+1. Sambungkan GitHub menggunakan token.
 2. Tekan **Tambah video** atau **Tambah imej**. Edit pautan terus dalam baris tersebut; gunakan **Padam** untuk mengeluarkannya daripada senarai.
 3. Tetapkan durasi imej (3–300 saat, lalai 10 saat) dan teks bergerak.
 4. Tekan **Simpan & siarkan**. Perubahan tambah/edit/padam hanya diterbitkan selepas menekan butang ini.
@@ -50,6 +48,6 @@ npm run dev
 npm test
 ```
 
-Semakan meliputi format pautan YouTube/Drive, penolakan URL luar yang tidak sah, migrasi konfigurasi lama kepada senarai, durasi imej dan perlindungan konflik GitHub serta enkripsi, kata laluan salah dan reset akses setempat. Main balik YouTube dan akses imej sebenar bergantung pada pautan pemilik dan perlu disemak pada TV.
+Semakan meliputi format pautan YouTube/Drive, penolakan URL luar yang tidak sah, migrasi konfigurasi lama kepada senarai, durasi imej dan perlindungan konflik GitHub serta sambungan dan pemutusan sesi token. Main balik YouTube dan akses imej sebenar bergantung pada pautan pemilik dan perlu disemak pada TV.
 
 Playlist video menggunakan parameter rasmi [YouTube Embedded Players](https://developers.google.com/youtube/player_parameters#playlist). Imej berulang mengikut urutan yang ditambah; imej yang gagal dimuatkan dicuba semula atau dilangkau ke imej seterusnya.
