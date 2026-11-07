@@ -10,6 +10,10 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 
 Version 1.2.0 (versionCode 3) is named **Maida TV** and uses the supplied black, white and magenta Maida logo for the app icon and Android TV banner. The original image is packaged unchanged; the banner centers it without stretching. Package ID and playback behavior are unchanged. The workflow stages an unsigned APK in a draft release; sign with the existing release key before publishing an installable update. The download below remains the previous signed 1.1.0 until 1.2.0 is signed.
 
+## About / Update APK
+
+Press Menu on the TV remote and select **About / Update APK**, or select the ⓘ link on the TV page. About displays the installed package version when opened by the updated app, fetches published stable Android releases from GitHub, and links to available APKs and release notes. The same About link is available in admin. Draft releases and unsigned APK assets are excluded. Previously published 1.0.0/1.1.0 downloads remain on Pages. Future signed APKs should be attached to the corresponding published `android-vX.Y.Z` release. Downloads open in an external browser; installation remains manual. TVs without a browser can use a phone/computer and USB. The original 1.1.0 APK can view the web About page, but native version reporting and external-download handling require the updated signed APK.
+
 ## Install
 
 1. Download [Maida TV Signage v1.1.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.1.0.apk).

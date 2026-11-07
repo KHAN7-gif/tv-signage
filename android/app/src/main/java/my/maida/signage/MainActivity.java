@@ -2,6 +2,9 @@ package my.maida.signage;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.ActivityNotFoundException;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -71,12 +74,15 @@ public class MainActivity extends Activity {
         frame.addView(offline, new FrameLayout.LayoutParams(-1, -1));
         offline.setVisibility(View.GONE);
         setContentView(frame);
+        web.setDownloadListener((url, userAgent, disposition, mime, length) -> openExternal(Uri.parse(url)));
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (request.isForMainFrame() && handleAboutLink(request.getUrl())) return true;
                 return request.isForMainFrame() ? !allowed(request.getUrl()) : !allowedFrame(request.getUrl());
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Uri uri = Uri.parse(url);
+                if (handleAboutLink(uri)) return true;
                 return !allowed(uri) && !allowedFrame(uri);
             }
             @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap icon) {
@@ -102,6 +108,46 @@ public class MainActivity extends Activity {
             @Override public void onHideCustomView() { closeFullscreen(); }
         });
         immersive(); openHome();
+    }
+    private String installedVersion() {
+        try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; }
+        catch (PackageManager.NameNotFoundException error) { return ""; }
+    }
+    private void openAbout() {
+        closeFullscreen();
+        Uri about = Uri.parse(HOME + "about.html").buildUpon()
+            .appendQueryParameter("installed", installedVersion()).build();
+        web.loadUrl(about.toString());
+    }
+    private boolean handleAboutLink(Uri uri) {
+        String path = uri.getPath();
+        if (allowed(uri) && ("/tv-signage/about.html".equals(path)
+                || "/tv-signage/public/about.html".equals(path))) {
+            // Always use the installed package version instead of a link's query value.
+            if (!installedVersion().equals(uri.getQueryParameter("installed"))) {
+                openAbout(); return true;
+            }
+        }
+        if (isReleaseLink(uri)) { openExternal(uri); return true; }
+        return false;
+    }
+    private boolean isReleaseLink(Uri uri) {
+        if (!"https".equals(uri.getScheme())) return false;
+        String path = uri.getPath();
+        if (path == null) return false;
+        return ("github.com".equals(uri.getHost()) &&
+                ("/KHAN7-gif/tv-signage/releases".equals(path)
+                || path.startsWith("/KHAN7-gif/tv-signage/releases/")))
+            || (allowed(uri) && path.startsWith("/tv-signage/public/downloads/") && path.endsWith(".apk"));
+    }
+    private void openExternal(Uri uri) {
+        if (!isReleaseLink(uri)) return;
+        try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); }
+        catch (ActivityNotFoundException error) {
+            new AlertDialog.Builder(this).setTitle("Muat turun Maida TV")
+                .setMessage("TV ini tiada browser untuk muat turun. Buka pautan ini pada telefon atau komputer dan pindahkan APK melalui USB:\n\n" + uri)
+                .setPositiveButton("Tutup", (dialog, which) -> immersive()).show();
+        }
     }
     private boolean allowed(Uri uri) {
         String path = uri.getPath();
@@ -139,7 +185,7 @@ public class MainActivity extends Activity {
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
             new AlertDialog.Builder(this).setTitle("Maida TV")
-                .setItems(new String[]{"Muat semula signage", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); })
+                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); })
                 .show();
             return true;
         }

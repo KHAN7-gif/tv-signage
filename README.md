@@ -37,6 +37,10 @@ GitHub Pages menggunakan **Deploy from a branch → main → / (root)**. Fail ma
 
 Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan, kemudian tersembunyi. Paparan admin menunjukkan tetapan yang sudah disimpan, bukan perubahan yang belum disimpan.
 
+## About / Update APK
+
+Buka ikon ⓘ di paparan TV atau pautan **About / Update APK** di admin untuk melihat versi yang diterbitkan, nota keluaran dan pautan APK. Aplikasi Android baharu juga menyediakan About melalui Menu remote dan melaporkan versi yang dipasang. Kemas kini dipasang secara manual. Untuk versi seterusnya, lampirkan APK yang telah ditandatangani pada keluaran GitHub awam bertag `android-vX.Y.Z`; senarai About dikemas kini automatik. Binaan draf/unsigned tidak dipaparkan sebagai kemas kini.
+
 ## Android TV
 
 Lihat [panduan Android TV](android/README.md). Aplikasi membuka URL GitHub Pages dan memerlukan internet serta Android System WebView yang dikemas kini. APK 1.1.0 menambah sokongan navigasi iframe YouTube; gunakan versi ini untuk paparan video YouTube.
