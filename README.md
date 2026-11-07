@@ -2,8 +2,8 @@
 
 Paparan TV mengandungi **tiga komponen sahaja**:
 
-1. Video **YouTube 16:9**, berulang dan tanpa suara.
-2. Imej **Google Drive 9:16**.
+1. Senarai video **YouTube 16:9**, dimainkan mengikut urutan, berulang dan tanpa suara.
+2. Senarai imej **Google Drive 9:16**, bertukar mengikut durasi setiap imej.
 3. Teks bergerak.
 
 TV: https://khan7-gif.github.io/tv-signage/
@@ -14,14 +14,14 @@ Admin: https://khan7-gif.github.io/tv-signage/admin.html
 
 1. Buka panel admin pada telefon atau komputer.
 2. Masukkan GitHub fine-grained personal access token untuk repo `KHAN7-gif/tv-signage`, permission **Contents: Read and write**, kemudian tekan **Sambung GitHub**. Token hanya berada dalam memori tab.
-3. Masukkan pautan satu video YouTube dan pautan satu fail imej Google Drive.
-4. Tulis teks bergerak, kemudian tekan **Simpan & siarkan**.
+3. Tekan **Tambah video** atau **Tambah imej** untuk menambah pautan. Edit pautan terus dalam baris tersebut; gunakan **Padam** untuk mengeluarkannya daripada senarai.
+4. Tetapkan durasi imej (3–300 saat, lalai 10 saat), tulis teks bergerak, kemudian tekan **Simpan & siarkan**. Perubahan tambah/edit/padam hanya diterbitkan selepas menekan butang ini.
 
 Video mesti membenarkan embedding. Autoplay menggunakan mod mute; YouTube masih boleh memaparkan kawalan, iklan atau mesej sekatan berdasarkan polisi video/peranti. Kandungan yang memerlukan log masuk, mempunyai sekatan umur atau embedding dimatikan mungkin tidak dimainkan.
 
 Untuk imej Drive, gunakan JPG/PNG dan set **General access → Anyone with the link → Viewer**. Gunakan pautan `/file/d/ID/view`, bukan folder. Imej dipaparkan melalui thumbnail awam Drive; fail peribadi atau yang disekat mungkin gagal dimuatkan. Bingkai 9:16 menggunakan contain supaya keseluruhan imej kelihatan.
 
-Medan media boleh dikosongkan. Slot yang belum dikonfigurasi hanya menunjukkan arahan ringkas; tiada contoh video atau imej pihak ketiga disiarkan secara automatik. Konfigurasi awal dikosongkan supaya pemilik memasukkan pautan sendiri dalam admin.
+Setiap senarai menyokong sehingga 100 pautan. Padam semua baris untuk mengosongkan slot TV. Pautan lama dalam format satu video/imej masih dibaca dan dimigrasi apabila menyimpan; tiada pautan sedia ada dipadam secara automatik. Padam dalam panel hanya mengeluarkan pautan daripada signage, bukan memadam fail asal YouTube atau Drive.
 
 ## Storan dan penerbitan
 
@@ -42,4 +42,6 @@ npm run dev
 npm test
 ```
 
-Semakan meliputi format pautan YouTube/Drive, penolakan URL luar yang tidak sah, konfigurasi tiga medan dan perlindungan konflik GitHub. Main balik YouTube dan akses imej sebenar bergantung pada pautan pemilik dan perlu disemak pada TV.
+Semakan meliputi format pautan YouTube/Drive, penolakan URL luar yang tidak sah, migrasi konfigurasi lama kepada senarai, durasi imej dan perlindungan konflik GitHub. Main balik YouTube dan akses imej sebenar bergantung pada pautan pemilik dan perlu disemak pada TV.
+
+Playlist video menggunakan parameter rasmi [YouTube Embedded Players](https://developers.google.com/youtube/player_parameters#playlist). Imej berulang mengikut urutan yang ditambah; imej yang gagal dimuatkan dicuba semula atau dilangkau ke imej seterusnya.

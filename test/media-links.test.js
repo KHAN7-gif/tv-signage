@@ -10,6 +10,16 @@ test('Google Drive file links are accepted, folders and unrelated links are reje
  const id='AbCdEfGhIjKlMn0123';assert.equal(driveImage(`https://drive.google.com/file/d/${id}/view?usp=sharing`),`https://drive.google.com/thumbnail?id=${id}&sz=w1600`);assert.ok(driveImage(`https://drive.google.com/open?id=${id}`).includes(id));
  assert.throws(()=>driveImage(`https://drive.google.com/drive/folders/${id}`));assert.throws(()=>driveImage(`https://example.com/file/d/${id}/view`));
 });
-test('only three public settings survive validation; empty media stays unconfigured',()=>{
- assert.deepEqual(validateConfig({youtubeUrl:' ',driveImageUrl:'',ticker:' hello ',bookingStatusUrl:'old'}),{youtubeUrl:'',driveImageUrl:'',ticker:'hello'});assert.throws(()=>validateConfig({youtubeUrl:'',driveImageUrl:'',ticker:'x'.repeat(2001)}));
+test('legacy single links migrate without dropping media; playlists keep order and durations',()=>{
+ const legacy=validateConfig({youtubeUrl:' https://youtu.be/jfKfPfyJRdk ',driveImageUrl:'https://drive.google.com/file/d/AbCdEfGhIjKlMn0123/view',ticker:' hello '});
+ assert.deepEqual(legacy,{videos:[{url:'https://youtu.be/jfKfPfyJRdk'}],images:[{url:'https://drive.google.com/file/d/AbCdEfGhIjKlMn0123/view',duration:10}],ticker:'hello'});
+ const config=validateConfig({videos:[{url:'https://youtu.be/jfKfPfyJRdk'},{url:'https://youtu.be/5qap5aO4i9A'}],images:[{url:'https://drive.google.com/open?id=AbCdEfGhIjKlMn0123',duration:5}],ticker:''});
+ assert.equal(config.videos.length,2);assert.equal(config.images[0].duration,5);
+ const embed=new URL(youtubeEmbed(config.videos[0].url,'https://khan7-gif.github.io',config.videos.map(item=>item.url)));assert.equal(embed.searchParams.get('playlist'),'5qap5aO4i9A');assert.equal(embed.searchParams.get('loop'),'1');
+});
+test('empty lists clear slots; incomplete links and invalid image durations cannot be published',()=>{
+ assert.deepEqual(validateConfig({videos:[],images:[],ticker:' hi '}),{videos:[],images:[],ticker:'hi'});
+ assert.throws(()=>validateConfig({videos:[{url:''}],images:[],ticker:''}),/Video 1/);
+ assert.throws(()=>validateConfig({videos:[],images:[{url:'https://drive.google.com/open?id=AbCdEfGhIjKlMn0123',duration:0}],ticker:''}),/3 hingga 300/);
+ assert.throws(()=>validateConfig({videos:[],images:[],ticker:'x'.repeat(2001)}));
 });

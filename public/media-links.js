@@ -10,10 +10,10 @@ export function youtubeId(value) {
  if(!id||! /^[\w-]{11}$/.test(id))throw Error('Gunakan pautan video YouTube, bukan channel atau playlist.');
  return id;
 }
-export function youtubeEmbed(value,origin) {
+export function youtubeEmbed(value,origin,playlist=[value]) {
  const id=youtubeId(value);if(!id)return '';
  const url=new URL(`https://www.youtube-nocookie.com/embed/${id}`);
- for(const [key,val]of Object.entries({autoplay:'1',mute:'1',loop:'1',playlist:id,playsinline:'1',rel:'0',controls:'1',enablejsapi:'1',origin}))url.searchParams.set(key,val);
+ for(const [key,val]of Object.entries({autoplay:'1',mute:'1',loop:'1',playlist:(playlist.length>1?playlist.slice(1):playlist).map(youtubeId).join(','),playsinline:'1',rel:'0',controls:'1',enablejsapi:'1',origin}))url.searchParams.set(key,val);
  return url.href;
 }
 export function driveImage(value) {
@@ -25,7 +25,21 @@ export function driveImage(value) {
  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w1600`;
 }
 export function validateConfig(value) {
- if(!value||typeof value.youtubeUrl!=='string'||typeof value.driveImageUrl!=='string'||typeof value.ticker!=='string'||value.ticker.length>2000)throw Error('Tetapan paparan tidak sah.');
- const clean={youtubeUrl:value.youtubeUrl.trim(),driveImageUrl:value.driveImageUrl.trim(),ticker:value.ticker.trim()};
- youtubeId(clean.youtubeUrl);driveImage(clean.driveImageUrl);return clean;
+ if(!value||typeof value.ticker!=='string'||value.ticker.length>2000)throw Error('Tetapan paparan tidak sah.');
+ const videos=Array.isArray(value.videos)?value.videos:typeof value.youtubeUrl==='string'?(value.youtubeUrl.trim()?[{url:value.youtubeUrl}]:[]):null;
+ const images=Array.isArray(value.images)?value.images:typeof value.driveImageUrl==='string'?(value.driveImageUrl.trim()?[{url:value.driveImageUrl,duration:10}]:[]):null;
+ if(!videos||!images||videos.length>100||images.length>100)throw Error('Maksimum 100 pautan bagi setiap senarai video atau imej.');
+ return {
+  videos:videos.map((item,i)=>{
+   if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Video ${i+1} atau padam baris tersebut.`);
+   const url=item.url.trim();youtubeId(url);return {url};
+  }),
+  images:images.map((item,i)=>{
+   if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Imej ${i+1} atau padam baris tersebut.`);
+   const url=item.url.trim();driveImage(url);const duration=item.duration??10;
+   if(!Number.isInteger(duration)||duration<3||duration>300)throw Error(`Durasi Imej ${i+1} mestilah 3 hingga 300 saat.`);
+   return {url,duration};
+  }),
+  ticker:value.ticker.trim()
+ };
 }
