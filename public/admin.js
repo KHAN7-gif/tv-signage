@@ -1,5 +1,5 @@
 import {readConfig,configVersion,saveConfig} from './github.js';
-import {validateConfig} from './media-links.js';
+import {validateConfig} from './media-links.js?v=playlist-1';
 const $=id=>document.getElementById(id);let sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}

@@ -1,5 +1,5 @@
 import {readConfig} from './github.js';
-import {youtubeEmbed,driveImage,validateConfig} from './media-links.js';
+import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=playlist-1';
 const $=id=>document.getElementById(id);
 const embedded=new URLSearchParams(location.search).get('embed')==='1';
 if(embedded)document.body.classList.add('embedded');
