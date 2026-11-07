@@ -1,0 +1,36 @@
+name: Publish verified signed APK
+on:
+  push:
+    branches: [main]
+    paths: ['public/downloads/*.apk', '.github/workflows/publish-signed-apk.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;35.0.0
+          log-accepted-android-sdk-licenses: false
+      - name: Verify original release signature and upload signed APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK_VERSION=$(sed -n "s/.*versionName '\([^']*\)'.*/\1/p" android/app/build.gradle)
+          [[ "$APK_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          APK_PATH="public/downloads/Maida-TV-v${APK_VERSION}.apk"
+          (cd public/downloads && sha256sum -c SHA256SUMS.txt)
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 "$APK_PATH"
+          CERT=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$APK_PATH")
+          echo "$CERT"
+          grep -q 'Signer #1 certificate SHA-256 digest: f3fad34bf5ca8331ca53349ff2819dfb1d7051e8717ed0a4fc19120f750e4013' <<< "$CERT"
+          gh release upload "android-v${APK_VERSION}" "$APK_PATH" public/downloads/SHA256SUMS.txt --clobber
