@@ -20,6 +20,9 @@
       "isNew": true
     },
     {
+      "url": "https://www.youtube.com/watch?v=g37YWWc7TL4"
+    },
+    {
       "url": "https://youtu.be/mvcFt7IeKRQ?si=2tb4TW48DN6GT7Uy",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202309/0421/418704276d35ce02e8cb532c6ca3826cf866ad2ec66c0b17.png"
     },
@@ -41,12 +44,12 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202206/0300/E2vZwVaDJbhLZpJo7Q10IyYo.png"
     },
     {
-      "url": "https://www.youtube.com/watch?v=g37YWWc7TL4"
-    },
-    {
       "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png",
       "isNew": true
+    },
+    {
+      "url": "https://youtu.be/XCowAxPll4E?si=VVU8BYbH1v74WjhO"
     },
     {
       "url": "https://youtu.be/Ijen5UPuG6U?si=VnhwbwcxWnS9JH83",
@@ -59,22 +62,19 @@
       "url": "https://youtu.be/9ewiJJe_nYI?si=ZrDj6GRBp6NH27ZX",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202210/3121/Xz6kd2CORZxe8JnfNJwvA35A.png",
       "isNew": true
-    },
-    {
-      "url": "https://youtu.be/XCowAxPll4E?si=VVU8BYbH1v74WjhO"
     }
   ],
   "images": [
-    {
-      "url": "https://drive.google.com/file/d/1eH_IXwHaMkmOe_X9m5YRfJkcuwCg-Sf7/view?usp=sharing",
-      "duration": 10
-    },
     {
       "url": "https://drive.google.com/file/d/1q_yBghlZvd4prXCOV8Px-wqa2gvbNvyF/view?usp=sharing",
       "duration": 10
     },
     {
       "url": "https://drive.google.com/file/d/1B-aItrp1kNHx6_i9Qjk7GmlIhSFMvRUg/view?usp=sharing",
+      "duration": 10
+    },
+    {
+      "url": "https://drive.google.com/file/d/1eH_IXwHaMkmOe_X9m5YRfJkcuwCg-Sf7/view?usp=sharing",
       "duration": 10
     },
     {
