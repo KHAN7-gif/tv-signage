@@ -6,7 +6,7 @@ No server, media or booking data is embedded into the APK. The website is loaded
 
 ## Install on Google TV / Android TV
 
-1. Download the **signed APK** from the repository Releases page on a phone/computer.
+1. Download the [signed APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.0.0.apk) from GitHub Pages on a phone/computer. The Releases page also links to the download.
 2. Transfer it to the TV using USB, a local network transfer tool, or a download-capable TV browser.
 3. In the TV settings, allow **Install unknown apps** for the file manager/download app you use.
 4. Open the APK, install, then launch **Maida TV Signage** from the TV's Apps screen.
