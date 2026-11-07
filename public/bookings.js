@@ -1,9 +1,10 @@
+import {getBookingStatus} from './booking-connection.js';
 import {overlayState} from './overlay-state.js';
 let endpoint='';
 window.addEventListener('signage-config',e=>{const next=e.detail.bookingStatusUrl||'';if(endpoint!==next){endpoint=next;poll()}});
 const root = document.getElementById('booking-stations');
 const sync = document.getElementById('booking-sync');
-let snapshot = null, received = 0;
+let snapshot = null, received = 0, pending = false;
 function connection(connected,label){sync.className='connection-dot '+(connected?'connected':'disconnected');sync.textContent='';sync.setAttribute('aria-label',label);sync.title=label}
 function unavailable(message) { snapshot = null; root.replaceChildren();const text=document.createElement('span');text.className='booking-message';text.textContent=message;root.append(text);connection(false,'Tidak tersambung'); }
 function render() {
@@ -29,15 +30,15 @@ function render() {
   connection(true,'Status langsung');
 }
 async function poll() {
+  if(pending || !endpoint)return;
+  pending=true;const requested=endpoint;
   try {
-    if(!endpoint) return unavailable('URL status booking belum dikonfigurasi');
-    const url=new URL(endpoint);if(url.protocol!=='https:')throw Error();
-    const response = await fetch(url, {cache:'no-store',signal:AbortSignal.timeout(9000)});
-    if (!response.ok) throw Error();
-    const data = await response.json();
-    if (!Array.isArray(data.stations)) throw Error();
-    snapshot = data; received = Date.now(); render();
-  } catch { unavailable('Status konsol tidak tersedia'); }
+    const data=await getBookingStatus(requested);
+    if(requested!==endpoint)return;
+    snapshot=data;received=Date.now();render();
+  } catch(error) {
+    if(requested===endpoint){unavailable('Status konsol tidak tersedia');sync.title=error.message;sync.setAttribute('aria-label',error.message);}
+  } finally {pending=false;}
 }
 if (new URLSearchParams(location.search).get('demo') === '1') {
   unavailable('Sambungan PS Booking tersedia selepas sambungan Maida Legacy diaktifkan');

@@ -1,3 +1,4 @@
+import {getBookingStatus} from './booking-connection.js';
 import {readConfig,configVersion,saveConfig,uploadMedia} from './github.js';
 import {isDemo,readDemo,saveDemo,uploadDemo,mediaSource} from './demo.js';
 let config, sha, busy=false, dirty=false;
@@ -36,3 +37,10 @@ $('save').onclick=async()=>{
  try{config.ticker=$('text').value;config.duration=duration;if(isDemo)await saveDemo(config);else sha=await saveConfig(config,$('password').value,sha);dirty=false;$('save-status').textContent='Semua disimpan';$('save-caption').textContent=isDemo?'Demo telah disimpan':'Playlist telah disiarkan';$('preview').src=playerURL+(isDemo?'&':'?')+'embed=1';notice(isDemo?'Demo disimpan dalam pelayar ini. Pratonton telah dikemas kini.':'Disimpan di GitHub. TV menerima perubahan selepas cache GitHub dikemas kini, biasanya beberapa minit.')}catch(error){notice(error.message)}finally{setBusy(false)}
 };
 (async()=>{setBusy(true);try{config=isDemo?await readDemo():await readConfig();$('text').value=config.ticker;$('duration').value=config.duration;updateText();$('save-status').textContent='Semua disimpan'}catch{notice('Konfigurasi GitHub belum tersedia. Pastikan perubahan sudah digabungkan ke main.');$('save-status').textContent='Belum tersambung'}finally{setBusy(false)}})();
+
+$('test-booking').onclick=async()=>{
+ $('test-booking').disabled=true;$('booking-result').textContent='Menyemak sambungan…';
+ try{if(!config?.bookingStatusUrl)throw Error('URL status belum dikonfigurasi.');const data=await getBookingStatus(config.bookingStatusUrl);$('booking-result').textContent=`Berjaya: ${data.stations.length} station diterima.`}
+ catch(error){$('booking-result').textContent=error.message}
+ finally{$('test-booking').disabled=false}
+};
