@@ -6,6 +6,10 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 
 **Version 1.1.0** permits embedded YouTube navigation while keeping main-frame navigation restricted to this signage site. Video and image links are entered on the website admin panel. Media is not packaged into the APK. Internet is required. The app does not start automatically at TV boot.
 
+## Native logo update (1.2.0)
+
+Version 1.2.0 (versionCode 3) uses the supplied black, white and magenta Maida logo for the app icon and Android TV banner. The original image is packaged unchanged; the banner centers it without stretching. Package ID and playback behavior are unchanged. The workflow stages an unsigned APK in a draft release; sign with the existing release key before publishing an installable update. The download below remains the previous signed 1.1.0 until 1.2.0 is signed.
+
 ## Install
 
 1. Download [Maida TV Signage v1.1.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.1.0.apk).
