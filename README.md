@@ -51,3 +51,7 @@ Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV s
 ## Susun atur status TV
 
 PS Booking memaparkan semua station dalam grid enam lajur pada TV (12 station = dua baris), termasuk eRacing. Pada paparan menegak, grid menggunakan tiga lajur. Kad hanya memaparkan nombor station, jenis konsol, status dan baki masa. Kawalan ikon skrin penuh/tetapan muncul apabila remote, tetikus atau sentuhan digunakan, kemudian tersembunyi selepas 2.5 saat. Data ujian untuk semakan grid tidak disimpan dalam konfigurasi produksi.
+
+## APK Android TV
+
+Versi Android TV tersedia sebagai APK pemasangan terus. Lihat [panduan Android TV](android/README.md) untuk pemasangan, binaan dan keperluan peranti. Laman web kekal di GitHub Pages; aplikasi hanya membukanya dalam paparan TV.
