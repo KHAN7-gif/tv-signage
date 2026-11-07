@@ -1,6 +1,6 @@
 # Maida Legacy TV Signage — GitHub Pages
 
-Media, playlist dan tetapan disimpan dalam repo **KHAN7-gif/tv-signage**. Paparan 16:9, 9:16, teks berjalan, panel admin iPhone, dan status PS Booking terus daripada **https://apps.maidaesports.my**.
+Media, playlist dan tetapan disimpan dalam repo **KHAN7-gif/tv-signage**. Paparan 16:9, 9:16, teks berjalan, panel admin iPhone, dan status PS Booking terus daripada **https://royalblue-oryx-448762.hostingersite.com**.
 
 ## Terbitkan
 
@@ -22,7 +22,7 @@ TV membaca config dan media daripada branch `main` melalui raw GitHub. Semakan p
 
 ## Status langsung Maida Legacy
 
-TV membaca `https://apps.maidaesports.my/display-api/status` setiap 5 saat. Ini sambungan terus ke hosting Maida Legacy. Status pelanggan/tempahan kekal dalam MySQL Maida Legacy; GitHub hanya menyimpan media dan tetapan signage.
+TV membaca `https://royalblue-oryx-448762.hostingersite.com/display-api/status` setiap 5 saat. Ini sambungan terus ke hosting Maida Legacy. Status pelanggan/tempahan kekal dalam MySQL Maida Legacy; GitHub hanya menyimpan media dan tetapan signage.
 
 Laluan status belum tersedia pada hosting ketika semakan. Untuk mengaktifkannya di repo **KHAN7-gif/maidalegacy**:
 

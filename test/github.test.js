@@ -8,4 +8,4 @@ test('GitHub config snapshot and optimistic concurrency preserve UTF-8 and rejec
  try{const snapshot=await configVersion('test-token');assert.deepEqual(snapshot,{sha:'old-sha',config});await assert.rejects(saveConfig(config,'test-token',snapshot.sha),/konflik/)}finally{globalThis.fetch=original}
 });
 test('upload rejects oversize files before making GitHub requests',async()=>{await assert.rejects(uploadMedia({size:21*1024*1024},'token'),/20 MB/)});
-test('production config points to live booking hosting and contains no credentials',()=>{const c=JSON.parse(fs.readFileSync(new URL('../public/config.json',import.meta.url)));assert.equal(c.bookingStatusUrl,'https://apps.maidaesports.my/display-api/status');assert.ok(!JSON.stringify(c).includes('API_KEY'))});
+test('production config points to live booking hosting and contains no credentials',()=>{const c=JSON.parse(fs.readFileSync(new URL('../public/config.json',import.meta.url)));assert.equal(c.bookingStatusUrl,'https://royalblue-oryx-448762.hostingersite.com/display-api/status');assert.ok(!JSON.stringify(c).includes('API_KEY'))});
