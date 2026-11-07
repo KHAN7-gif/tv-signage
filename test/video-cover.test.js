@@ -24,3 +24,12 @@ test('COMING SOON is optional and per-video, retaining only checked values',()=>
  assert.deepEqual(validateConfig(config).videos,[{url:first,comingSoon:true},{url:second}]);
  assert.throws(()=>validateConfig({...config,videos:[{url:first,comingSoon:'yes'}]}),/COMING SOON/);
 });
+test('NEW persists independently of legacy Coming Soon, with at most one label per video',async()=>{
+ const {videoLabel}=await import('../public/video-cover.js');
+ const config={videos:[{url:first,isNew:true},{url:second,comingSoon:true}],images:[],ticker:''};
+ assert.deepEqual(validateConfig(config).videos,config.videos);
+ assert.equal(videoLabel(config.videos[0]),'NEW');assert.equal(videoLabel(config.videos[1]),'COMING SOON');assert.equal(videoLabel({}), '');
+ assert.deepEqual(validateConfig({...config,videos:[{url:first,isNew:false}]}).videos,[{url:first}]);
+ assert.throws(()=>validateConfig({...config,videos:[{url:first,isNew:true,comingSoon:true}]}),/Pilih hanya/);
+ assert.throws(()=>validateConfig({...config,videos:[{url:first,isNew:'yes'}]}),/NEW/);
+});

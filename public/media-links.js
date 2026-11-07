@@ -44,7 +44,9 @@ export function validateConfig(value) {
    if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Video ${i+1} atau padam baris tersebut.`);
    const url=item.url.trim();youtubeId(url);const coverUrl=coverImageUrl(item.coverUrl);
    if(item.comingSoon!==undefined&&typeof item.comingSoon!=='boolean')throw Error(`Pilihan COMING SOON Video ${i+1} tidak sah.`);
-   return {url,...(coverUrl?{coverUrl}:{}),...(item.comingSoon?{comingSoon:true}:{})};
+   if(item.isNew!==undefined&&typeof item.isNew!=='boolean')throw Error(`Pilihan NEW Video ${i+1} tidak sah.`);
+   if(item.isNew&&item.comingSoon)throw Error(`Pilih hanya NEW atau COMING SOON untuk Video ${i+1}.`);
+   return {url,...(coverUrl?{coverUrl}:{}),...(item.comingSoon?{comingSoon:true}:{}),...(item.isNew?{isNew:true}:{})};
   }),
   images:images.map((item,i)=>{
    if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Imej ${i+1} atau padam baris tersebut.`);

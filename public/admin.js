@@ -1,5 +1,5 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
-import {validateConfig} from './media-links.js?v=covers-1';
+import {validateConfig} from './media-links.js?v=covers-2';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
@@ -24,10 +24,14 @@ function render(kind,focusIndex=-1){
    };
    cover.oninput=()=>{item.coverUrl=cover.value;changed();clearTimeout(timer);request++;preview.replaceChildren();timer=setTimeout(show,400)};
    const soonLabel=document.createElement('label');soonLabel.className='coming-soon-option';soonLabel.htmlFor=`video-coming-soon-${index}`;
-   const soon=document.createElement('input');soon.type='checkbox';soon.id=soonLabel.htmlFor;soon.checked=item.comingSoon===true;soon.onchange=()=>{item.comingSoon=soon.checked;changed()};
+   const soon=document.createElement('input');soon.type='checkbox';soon.id=soonLabel.htmlFor;soon.checked=item.comingSoon===true;soon.onchange=()=>{item.comingSoon=soon.checked;if(soon.checked){item.isNew=false;fresh.checked=false}changed()};
    const soonText=document.createElement('span');soonText.textContent='COMING SOON';soonLabel.append(soon,soonText);
-   const soonHelp=document.createElement('small');soonHelp.className='field-note';soonHelp.textContent='Tandakan untuk memaparkan COMING SOON di luar kotak imej. Jika tidak ditanda, tiada teks dipaparkan.';
-   row.append(coverLabel,cover,help,preview,soonLabel,soonHelp);show();
+   const newLabel=document.createElement('label');newLabel.className='coming-soon-option new-option';newLabel.htmlFor=`video-new-${index}`;
+   const fresh=document.createElement('input');fresh.type='checkbox';fresh.id=newLabel.htmlFor;fresh.checked=item.isNew===true;fresh.onchange=()=>{item.isNew=fresh.checked;if(fresh.checked){item.comingSoon=false;soon.checked=false}changed()};
+   const newText=document.createElement('span');newText.textContent='NEW';newLabel.append(fresh,newText);
+   const options=document.createElement('div');options.className='video-label-options';options.append(soonLabel,newLabel);
+   const soonHelp=document.createElement('small');soonHelp.className='field-note';soonHelp.textContent='Pilih COMING SOON atau NEW untuk memaparkan label di luar kotak imej. Kosongkan kedua-dua pilihan untuk menyembunyikan teks.';
+   row.append(coverLabel,cover,help,preview,options,soonHelp);show();
   }
   if(!video){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
   list.append(row);

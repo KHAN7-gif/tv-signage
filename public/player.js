@@ -1,6 +1,6 @@
 import {readConfig} from './github.js';
-import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=covers-1';
-import {createVideoCover} from './video-cover.js?v=covers-1';
+import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=covers-2';
+import {createVideoCover} from './video-cover.js?v=covers-2';
 const $=id=>document.getElementById(id);
 const embedded=new URLSearchParams(location.search).get('embed')==='1';
 if(embedded)document.body.classList.add('embedded');
