@@ -5,12 +5,12 @@ Media, playlist dan tetapan disimpan dalam repo **KHAN7-gif/tv-signage**. Papara
 ## Terbitkan
 
 1. Gabungkan perubahan ini ke `main`.
-2. GitHub repo → Settings → Pages → Source: **GitHub Actions**.
-3. Jalankan workflow **Deploy GitHub Pages** jika belum berjalan.
+2. GitHub repo → Settings → Pages → Source: **Deploy from a branch**, branch **main**, folder **/ (root)**.
+3. GitHub Pages menerbitkan semula secara automatik selepas commit ke main.
 4. TV: https://khan7-gif.github.io/tv-signage/
 5. Admin: https://khan7-gif.github.io/tv-signage/admin.html
 
-URL di atas ialah alamat sasaran; workflow mesti berjaya sebelum ia tersedia. Repo ini awam, jadi semua media dan playlist juga awam.
+Fail masuk root menggunakan aset dalam `public/`; kekalkan kedua-duanya sepadan apabila mengubah HTML. URL tersedia selepas proses Pages berjaya. Repo ini awam, jadi semua media dan playlist juga awam.
 
 ## Simpan dari admin
 
@@ -46,4 +46,4 @@ npm test
 
 Pratonton statik: http://localhost:8080 . Untuk cuba upload tanpa menulis GitHub, gunakan `/admin.html?demo=1`; demo kekal pada pelayar ini sahaja. Status produksi pada localhost disekat CORS; gunakan domain GitHub Pages untuk sambungan sebenar.
 
-Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV sebenar dan sambungan MySQL produksi masih diperlukan. Workflow Pages memerlukan Pages diaktifkan pada repo.
+Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV sebenar dan sambungan MySQL produksi masih diperlukan. GitHub Pages perlu diaktifkan pada repo.
