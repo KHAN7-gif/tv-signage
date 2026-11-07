@@ -3,7 +3,8 @@
   "videos": [
     {
       "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
-      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png"
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png",
+      "isNew": true
     },
     {
       "url": "https://youtu.be/1tBUsXIkG1A?si=XoYfl3bmsssvdKwM",
@@ -14,19 +15,27 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202212/2101/CxnQHVI3gzboBTHqEEQVWZJ6.png"
     },
     {
-      "url": "https://youtu.be/u5rWBgBjDsc?si=tO-3eNF13N9WOPia"
+      "url": "https://youtu.be/u5rWBgBjDsc?si=tO-3eNF13N9WOPia",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202602/2009/15a5c2ccc34262d0b9c780f7b81c7d95816a0516dc05daaf.png",
+      "isNew": true
     },
     {
-      "url": "https://youtu.be/mvcFt7IeKRQ?si=2tb4TW48DN6GT7Uy"
+      "url": "https://youtu.be/mvcFt7IeKRQ?si=2tb4TW48DN6GT7Uy",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202604/2216/83baec5746075ec3e379c096dfe68111095c91cb7139a633.png",
+      "isNew": true
     },
     {
-      "url": "https://youtu.be/vyhT-9Xq-g8?si=l4oH4QidefRCZeq0"
+      "url": "https://youtu.be/vyhT-9Xq-g8?si=l4oH4QidefRCZeq0",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202604/0801/f2bdf0b6807d0e43c432e4de00f444df6c97732065904006.png"
     },
     {
-      "url": "https://youtu.be/rN_PBAK5YyM?si=Rhhpbw2E5Ch7sxQU"
+      "url": "https://youtu.be/rN_PBAK5YyM?si=Rhhpbw2E5Ch7sxQU",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202211/1407/XFU0aPBvtm3W2od1ZvhByAOv.png"
     },
     {
-      "url": "https://youtu.be/ohClxMmNLQQ?si=AaHhxOT0HhlOBA9_"
+      "url": "https://youtu.be/ohClxMmNLQQ?si=AaHhxOT0HhlOBA9_",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202012/0815/0Xqi1LgRoEtJ5zlFprpd54Vu.png",
+      "isNew": true
     },
     {
       "url": "https://youtu.be/u84hRUQlaio?si=3xltFeWUy1yn8i96"
