@@ -14,19 +14,19 @@ function render(kind,focusIndex=-1){
  const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Imej';const list=$(prefix+'-list');list.replaceChildren();$(prefix+'-count').textContent=state[kind].length;
  if(!state[kind].length){const empty=document.createElement('p');empty.className='empty-list';empty.textContent=`Belum ada ${video?'video':'imej'}. Tekan Tambah ${video?'video':'imej'} untuk bermula.`;list.append(empty)}
  state[kind].forEach((item,index)=>{
-  const row=document.createElement('div');row.className='media-row';
+  const row=document.createElement('div');row.className='media-row '+(video?'media-row-video':'media-row-image');
   const heading=document.createElement('div');heading.className='media-row-heading';const name=document.createElement('strong');name.textContent=`${title} ${index+1}`;
   const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};const handle=document.createElement('button');handle.type='button';handle.className='sort-handle';handle.id=`${prefix}-sort-${index}`;handle.textContent='⠿';handle.title='Seret untuk susun; guna ↑ atau ↓ pada keyboard';handle.setAttribute('aria-label',`Susun ${title} ${index+1}`);handle.setAttribute('aria-describedby','reorder-help');
   const actions=document.createElement('div');actions.className='row-actions';
   for(const [offset,text,description] of [[-1,'↑','Naikkan'],[1,'↓','Turunkan']]){const button=document.createElement('button');button.type='button';button.className='move-media';button.textContent=text;button.disabled=index+offset<0||index+offset>=state[kind].length;button.setAttribute('aria-label',`${description} ${title} ${index+1}`);button.onclick=()=>reorder(kind,index,index+offset);actions.append(button)}
   actions.append(remove);heading.append(handle,name,actions);
   attachReorderHandle(handle,row,index,{list,canMove:()=>Boolean(sha)&&!busy,onMove:(from,to)=>reorder(kind,from,to),label:`${title} ${index+1}`});
-  const input=document.createElement('input');input.type='url';input.value=item.url;input.required=true;input.id=`${prefix}-url-${index}`;input.placeholder=video?'https://youtu.be/…':'https://drive.google.com/file/d/…/view';input.setAttribute('aria-label',`Pautan ${title.toLowerCase()} ${index+1}`);input.oninput=()=>{item.url=input.value;changed()};
+  const input=document.createElement('input');input.type='url';input.className='media-url';input.value=item.url;input.required=true;input.id=`${prefix}-url-${index}`;input.placeholder=video?'https://youtu.be/…':'https://drive.google.com/file/d/…/view';input.setAttribute('aria-label',`Pautan ${title.toLowerCase()} ${index+1}`);input.oninput=()=>{item.url=input.value;changed()};
   row.append(heading,input);
   if(video){
    const coverLabel=document.createElement('label');coverLabel.htmlFor=`video-cover-${index}`;coverLabel.className='cover-label';coverLabel.textContent='Pautan imej cover (pilihan)';
    const cover=document.createElement('input');cover.type='url';cover.id=coverLabel.htmlFor;cover.value=item.coverUrl||'';cover.placeholder='https://gmedia.playstation.com/…';cover.setAttribute('aria-label',`Pautan imej cover Video ${index+1}`);
-   const help=document.createElement('small');help.className='field-note';help.textContent='Tampal pautan terus imej dari PlayStation (Copy image address), bukan pautan halaman game. Kosongkan untuk menyembunyikan cover video ini.';
+   const help=document.createElement('small');help.className='field-note cover-help';help.textContent='Tampal pautan terus imej dari PlayStation (Copy image address), bukan pautan halaman game. Kosongkan untuk menyembunyikan cover video ini.';
    const preview=document.createElement('div');preview.className='cover-preview';let timer,request=0;
    const show=()=>{const version=++request;preview.replaceChildren();const value=cover.value.trim();if(!value)return;let parsed;try{parsed=new URL(value)}catch{return}if(parsed.protocol!=='https:')return;
     const image=document.createElement('img');image.alt=`Pratonton cover Video ${index+1}`;image.referrerPolicy='no-referrer';
@@ -41,7 +41,7 @@ function render(kind,focusIndex=-1){
    const fresh=document.createElement('input');fresh.type='checkbox';fresh.id=newLabel.htmlFor;fresh.checked=item.isNew===true;fresh.onchange=()=>{item.isNew=fresh.checked;if(fresh.checked){item.comingSoon=false;soon.checked=false}changed()};
    const newText=document.createElement('span');newText.textContent='NEW';newLabel.append(fresh,newText);
    const options=document.createElement('div');options.className='video-label-options';options.append(soonLabel,newLabel);
-   const soonHelp=document.createElement('small');soonHelp.className='field-note';soonHelp.textContent='Pilih COMING SOON atau NEW untuk memaparkan label di luar kotak imej. Kosongkan kedua-dua pilihan untuk menyembunyikan teks.';
+   const soonHelp=document.createElement('small');soonHelp.className='field-note badge-help';soonHelp.textContent='Pilih COMING SOON atau NEW untuk memaparkan label di luar kotak imej. Kosongkan kedua-dua pilihan untuk menyembunyikan teks.';
    row.append(coverLabel,cover,help,preview,options,soonHelp);show();
   }
   if(!video){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
