@@ -10,7 +10,7 @@ export async function readConfig() {
 async function request(path, token, options={}) {
  const response = await fetch(base+path, {...options,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'Content-Type':'application/json',...options.headers}});
  const data = await response.json();
- if (!response.ok) throw Error(response.status===409||response.status===422?'Fail berubah atau konflik. Muat semula sebelum menyimpan.':`GitHub: ${data.message || response.status}`);
+ if (!response.ok) { const error=Error(response.status===409||response.status===422?'Fail berubah atau konflik. Muat semula sebelum menyimpan.':`GitHub: ${data.message || response.status}`); error.status=response.status; throw error; }
  return data;
 }
 function encode(text) { const bytes = new TextEncoder().encode(text); let binary=''; for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(binary); }
