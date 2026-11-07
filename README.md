@@ -39,7 +39,7 @@ Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan
 
 ## Susun playlist
 
-Seret pemegang ⠿ pada setiap baris untuk mengubah urutan video atau imej dalam senarai masing-masing. Drag menyokong mouse dan sentuhan, auto-scroll di tepi skrin, serta Escape untuk membatalkan. Butang ↑/↓ dan kekunci anak panah pada pemegang disediakan sebagai alternatif. Cover, label NEW/COMING SOON, pautan dan durasi bergerak bersama item. Susunan hanya diterbitkan selepas **Simpan & siarkan**.
+Paparan **Galeri** menunjukkan thumbnail video dan imej dalam tiga lajur. Kotak thumbnail video mengikut nisbah asal cover/thumbnail selepas imej dimuatkan, tanpa crop. Pilihan NEW/COMING SOON dikekalkan dalam popup setiap video. Seret terus gambar atau pemegang ⠿ untuk mengubah urutan dalam senarai masing-masing, termasuk merentas baris/lajur. Double klik gambar (atau double tap pada telefon) untuk membuka popup pautan, cover, label dan durasi. Keyboard Enter/Space pada gambar juga membuka popup. Tekan **Selesai** selepas menyunting, kemudian **Simpan & siarkan** untuk menerbitkan perubahan. Seretan gambar tidak membuka popup. Pilihan **Senarai** mengekalkan paparan borang biasa; pilihan paparan disimpan dalam browser, berasingan daripada kandungan TV. Pratonton TV besar kekal di bahagian atas. Drag menyokong mouse dan sentuhan, auto-scroll di tepi skrin, serta Escape untuk membatalkan. Butang ↑/↓ dan kekunci anak panah pada pemegang disediakan sebagai alternatif. Cover, label NEW/COMING SOON, pautan dan durasi bergerak bersama item. Susunan hanya diterbitkan selepas **Simpan & siarkan**.
 
 ## Cover game mengikut video
 

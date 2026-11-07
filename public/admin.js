@@ -1,22 +1,34 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
 import {validateConfig} from './media-links.js?v=covers-2';
-import {moveItem,attachReorderHandle} from './reorder.js?v=reorder-1';
+import {moveItem,attachReorderHandle} from './reorder.js?v=gallery-2';
+import {thumbnailUrl} from './gallery.js?v=gallery-1';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
+let galleryMode=true;
+try{galleryMode=localStorage.getItem('maida-admin-playlist-view')!=='list'}catch{}
+function focusInput(prefix,index){const input=$(`${prefix}-url-${index}`);if(input){input.closest('.media-row').openEditor();input.focus()}else $('add-'+prefix).focus()}
+function applyView(){
+ for(const prefix of ['video','image']){
+  const list=$(prefix+'-list');list.classList.toggle('is-gallery',galleryMode);
+  list.querySelectorAll('.media-row').forEach(row=>row.closeEditor?.());
+ }
+ $('gallery-view').setAttribute('aria-pressed',String(galleryMode));$('list-view').setAttribute('aria-pressed',String(!galleryMode));
+}
+for(const [id,isGallery] of [['gallery-view',true],['list-view',false]])$(id).onclick=()=>{galleryMode=isGallery;try{localStorage.setItem('maida-admin-playlist-view',galleryMode?'gallery':'list')}catch{}applyView()};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
 function reorder(kind,from,to){
  if(!sha||busy||!moveItem(state[kind],from,to))return;
  changed();render(kind);const prefix=kind==='videos'?'video':'image';
- const handle=$(`${prefix}-sort-${to}`);handle.focus({preventScroll:true});handle.scrollIntoView({block:'nearest'});
+ const handle=$(galleryMode?`${prefix}-tile-${to}`:`${prefix}-sort-${to}`);handle.focus({preventScroll:true});handle.scrollIntoView({block:'nearest'});
  notice(`${kind==='videos'?'Video':'Imej'} ${from+1} dipindahkan ke kedudukan ${to+1}. Tekan Simpan & siarkan untuk menerbitkan susunan.`);
 }
 function render(kind,focusIndex=-1){
- const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Imej';const list=$(prefix+'-list');list.replaceChildren();$(prefix+'-count').textContent=state[kind].length;
+ const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Imej';const list=$(prefix+'-list');list.replaceChildren();list.classList.toggle('is-gallery',galleryMode);$(prefix+'-count').textContent=state[kind].length;
  if(!state[kind].length){const empty=document.createElement('p');empty.className='empty-list';empty.textContent=`Belum ada ${video?'video':'imej'}. Tekan Tambah ${video?'video':'imej'} untuk bermula.`;list.append(empty)}
  state[kind].forEach((item,index)=>{
   const row=document.createElement('div');row.className='media-row '+(video?'media-row-video':'media-row-image');
   const heading=document.createElement('div');heading.className='media-row-heading';const name=document.createElement('strong');name.textContent=`${title} ${index+1}`;
-  const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};const handle=document.createElement('button');handle.type='button';handle.className='sort-handle';handle.id=`${prefix}-sort-${index}`;handle.textContent='⠿';handle.title='Seret untuk susun; guna ↑ atau ↓ pada keyboard';handle.setAttribute('aria-label',`Susun ${title} ${index+1}`);handle.setAttribute('aria-describedby','reorder-help');
+  const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);focusInput(prefix,Math.min(index,state[kind].length-1))};const handle=document.createElement('button');handle.type='button';handle.className='sort-handle';handle.id=`${prefix}-sort-${index}`;handle.textContent='⠿';handle.title='Seret untuk susun; guna ↑ atau ↓ pada keyboard';handle.setAttribute('aria-label',`Susun ${title} ${index+1}`);handle.setAttribute('aria-describedby','reorder-help');
   const actions=document.createElement('div');actions.className='row-actions';
   for(const [offset,text,description] of [[-1,'↑','Naikkan'],[1,'↓','Turunkan']]){const button=document.createElement('button');button.type='button';button.className='move-media';button.textContent=text;button.disabled=index+offset<0||index+offset>=state[kind].length;button.setAttribute('aria-label',`${description} ${title} ${index+1}`);button.onclick=()=>reorder(kind,index,index+offset);actions.append(button)}
   actions.append(remove);heading.append(handle,name,actions);
@@ -45,12 +57,43 @@ function render(kind,focusIndex=-1){
    row.append(coverLabel,cover,help,preview,options,soonHelp);show();
   }
   if(!video){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
+  const thumb=document.createElement('button');thumb.type='button';thumb.className='gallery-thumb '+(video?'video-thumbnail':'image-thumbnail');thumb.id=`${prefix}-tile-${index}`;thumb.setAttribute('aria-label',`Seret ${title} ${index+1} untuk susun`);thumb.setAttribute('aria-describedby','reorder-help');
+  function updateThumbnail(){
+   thumb.replaceChildren();if(video)thumb.style.aspectRatio='1';const source=thumbnailUrl(item,kind);
+   const empty=document.createElement('span');empty.className='thumbnail-empty';empty.textContent=video?'▷ Video':'▧ Imej';
+   if(source){const image=document.createElement('img');image.alt=`${title} ${index+1}`;image.loading='lazy';image.referrerPolicy='no-referrer';image.draggable=false;image.onload=()=>{if(video&&thumb.contains(image)&&image.naturalWidth&&image.naturalHeight)thumb.style.aspectRatio=String(image.naturalWidth/image.naturalHeight)};image.onerror=()=>{if(video)thumb.style.aspectRatio='1';image.replaceWith(empty)};image.src=source;thumb.append(image)}else thumb.append(empty);
+   const type=document.createElement('span');type.className='thumbnail-type';type.textContent=video?'▷ VIDEO':'IMEJ';thumb.append(type);
+   const text=video?(item.isNew?'NEW':item.comingSoon?'COMING SOON':''):`${item.duration} saat`;
+   if(text){const badge=document.createElement('span');badge.className='thumbnail-badge'+(item.isNew?' badge-new':'');badge.textContent=text;thumb.append(badge)}
+  }
+  updateThumbnail();row.addEventListener('change',updateThumbnail);
+  attachReorderHandle(thumb,row,index,{list,canMove:()=>Boolean(sha)&&!busy,onMove:(from,to)=>reorder(kind,from,to),label:`${title} ${index+1}`,onActivate:()=>row.openEditor()});
+  const editor=document.createElement('div');editor.className='media-editor';
+  const body=document.createElement('div');body.className='media-editor-body';
+  [...row.children].filter(child=>child!==heading).forEach(child=>body.append(child));
+  editor.append(body);
+  const popup=document.createElement('dialog');popup.className='media-popup';popup.id=`${prefix}-popup-${index}`;popup.setAttribute('aria-labelledby',`${prefix}-popup-title-${index}`);
+  const popupHeader=document.createElement('div');popupHeader.className='popup-header';const popupTitle=document.createElement('h2');popupTitle.id=`${prefix}-popup-title-${index}`;popupTitle.textContent=`Kemas kini ${title} ${index+1}`;
+  const close=document.createElement('button');close.type='button';close.className='popup-close';close.textContent='×';close.setAttribute('aria-label','Tutup popup');popupHeader.append(popupTitle,close);
+  const popupNote=document.createElement('p');popupNote.className='popup-note';popupNote.textContent='Kemaskini pautan dan tetapan di sini. Tekan Selesai, kemudian Simpan & siarkan untuk menerbitkan perubahan ke TV.';
+  const footer=document.createElement('div');footer.className='popup-footer';const deleteHere=remove.cloneNode(true);deleteHere.onclick=()=>{row.closeEditor();remove.click()};
+  const done=document.createElement('button');done.type='button';done.className='primary';done.textContent='Selesai';footer.append(deleteHere,done);
+  popup.append(popupHeader,popupNote,footer);row.append(thumb,editor,popup);
+  row.closeEditor=()=>{editor.append(body);if(popup.open)popup.close()};
+  row.openEditor=()=>{if(!sha||busy)return;if(galleryMode&&!popup.open){popup.insertBefore(body,footer);popup.showModal()}input.focus()};
+  popup.addEventListener('close',()=>editor.append(body));close.onclick=row.closeEditor;
+  done.onclick=()=>{const invalid=[...body.querySelectorAll('input')].find(field=>!field.checkValidity());if(invalid){invalid.reportValidity();return}row.closeEditor();thumb.focus({preventScroll:true})};
+  popup.addEventListener('keydown',event=>{if(event.key==='Enter'&&event.target.tagName==='INPUT'){event.preventDefault();if(event.target.type==='checkbox')event.target.click();else done.click()}});
+  let backdropPress=false;
+  popup.addEventListener('pointerdown',event=>{const bounds=popup.getBoundingClientRect();backdropPress=event.target===popup&&(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)});
+  popup.addEventListener('click',event=>{if(backdropPress&&event.target===popup)row.closeEditor();backdropPress=false});
+  thumb.title='Double klik untuk kemas kini; seret untuk susun';thumb.setAttribute('aria-label',`${title} ${index+1}: seret untuk susun, double klik untuk kemas kini`);
   list.append(row);
  });
  $(prefix==='video'?'add-video':'add-image').disabled=state[kind].length>=100;
- if(focusIndex>=0)$(`${prefix}-url-${focusIndex}`)?.focus();
+ if(focusIndex>=0)focusInput(prefix,focusIndex);
 }
-function populate(config){state=config;$('festival').checked=config.festival==='deepavali';render('videos');render('images');$('ticker').value=config.ticker;$('counter').textContent=`${config.ticker.length} / 2000`}
+function populate(config){state=config;$('festival').checked=config.festival==='deepavali';render('videos');render('images');applyView();$('ticker').value=config.ticker;$('counter').textContent=`${config.ticker.length} / 2000`}
 for(const [button,kind] of [['add-video','videos'],['add-image','images']])$(button).onclick=()=>{if(!sha||busy||state[kind].length>=100)return;state[kind].push(kind==='videos'?{url:''}:{url:'',duration:10});changed();render(kind,state[kind].length-1)};
 $('festival').onchange=()=>{state.festival=$('festival').checked?'deepavali':'off';changed()};
 $('ticker').oninput=()=>{state.ticker=$('ticker').value;changed();$('counter').textContent=`${state.ticker.length} / 2000`};
@@ -72,5 +115,7 @@ $('disconnect').onclick=()=>{
  if(dirty&&!confirm('Perubahan belum disimpan akan dibuang daripada panel ini. Putuskan sambungan?'))return;
  activeToken='';sha=undefined;dirty=false;$('token').value='';connection(false);$('fields').disabled=true;$('save').disabled=true;$('save-status').textContent='Sambungkan GitHub untuk mengedit';notice('Sambungan diputuskan. Media yang telah disimpan dikekalkan.');$('token').focus();
 };
+let invalidTarget;
+$('settings').addEventListener('invalid',event=>{if(invalidTarget)return;invalidTarget=event.target;invalidTarget.closest('.media-row')?.openEditor();setTimeout(()=>{invalidTarget?.focus();invalidTarget=null},0)},true);
 $('settings').onsubmit=async e=>{e.preventDefault();if(!sha||busy)return;let config;try{config=validateConfig(state)}catch(error){notice(error.message);return}busy=true;$('save').disabled=true;$('fields').disabled=true;try{sha=await saveConfig(config,activeToken,sha);populate(config);dirty=false;$('save-status').textContent='Semua disimpan';notice('Senarai disimpan di GitHub. TV dikemas kini selepas cache GitHub diperbaharui.');$('preview').src=`./index.html?embed=1&refresh=${Date.now()}`}catch(error){notice(friendlyError(error))}finally{busy=false;$('fields').disabled=false;$('save').disabled=false}};
 readConfig().then(config=>{if(!sha){populate(validateConfig(config));$('save-status').textContent='Sambungkan GitHub untuk mengedit'}}).catch(()=>{if(!sha)$('save-status').textContent='Sambungkan GitHub untuk memuatkan tetapan'});
