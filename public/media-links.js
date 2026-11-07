@@ -29,7 +29,9 @@ export function validateConfig(value) {
  const videos=Array.isArray(value.videos)?value.videos:typeof value.youtubeUrl==='string'?(value.youtubeUrl.trim()?[{url:value.youtubeUrl}]:[]):null;
  const images=Array.isArray(value.images)?value.images:typeof value.driveImageUrl==='string'?(value.driveImageUrl.trim()?[{url:value.driveImageUrl,duration:10}]:[]):null;
  if(!videos||!images||videos.length>100||images.length>100)throw Error('Maksimum 100 pautan bagi setiap senarai video atau imej.');
+ if(value.festival!==undefined&&!['off','deepavali'].includes(value.festival))throw Error('Mod perayaan tidak sah.');
  return {
+  ...(value.festival!==undefined?{festival:value.festival}:{}),
   videos:videos.map((item,i)=>{
    if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Video ${i+1} atau padam baris tersebut.`);
    const url=item.url.trim();youtubeId(url);return {url};

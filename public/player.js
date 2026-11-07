@@ -1,5 +1,5 @@
 import {readConfig} from './github.js';
-import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=images-only-3';
+import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=deepavali-1';
 const $=id=>document.getElementById(id);
 const embedded=new URLSearchParams(location.search).get('embed')==='1';
 if(embedded)document.body.classList.add('embedded');
@@ -19,6 +19,7 @@ function playImages(images){
  next();
 }
 function apply(config){
+ document.body.dataset.festival=config.festival||'off';
  if(JSON.stringify(current.videos)!==JSON.stringify(config.videos)){
   if(config.videos.length){const urls=config.videos.map(item=>item.url);video=document.createElement('iframe');video.title='Senarai video YouTube';video.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';video.allowFullscreen=true;video.referrerPolicy='strict-origin-when-cross-origin';video.src=youtubeEmbed(urls[0],location.origin,urls,embedded);$('landscape').replaceChildren(video)}
   else{video=null;placeholder('landscape','16:9','Tambah video di panel admin')}

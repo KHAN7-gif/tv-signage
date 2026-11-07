@@ -28,3 +28,13 @@ test('admin preview can explicitly remain muted',()=>{
  const url=new URL(youtubeEmbed('https://youtu.be/jfKfPfyJRdk','https://khan7-gif.github.io',undefined,true));
  assert.equal(url.searchParams.get('mute'),'1');
 });
+
+test('festival mode can switch on or off without changing media or ticker; legacy config remains supported',()=>{
+ const original={videos:[{url:'https://youtu.be/jfKfPfyJRdk'}],images:[{url:'https://drive.google.com/file/d/AbCdEfGhIjKlMn0123/view',duration:10}],ticker:'MAIDA ESPORTS'};
+ for(const festival of ['deepavali','off']){
+  const result=validateConfig({...original,festival});
+  assert.equal(result.festival,festival);delete result.festival;assert.deepEqual(result,original);
+ }
+ assert.deepEqual(validateConfig(original),original);
+ assert.throws(()=>validateConfig({...original,festival:'invalid'}),/Mod perayaan/);
+});

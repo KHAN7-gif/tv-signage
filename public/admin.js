@@ -1,5 +1,5 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
-import {validateConfig} from './media-links.js?v=images-only-3';
+import {validateConfig} from './media-links.js?v=deepavali-1';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
@@ -18,8 +18,9 @@ function render(kind,focusIndex=-1){
  $(prefix==='video'?'add-video':'add-image').disabled=state[kind].length>=100;
  if(focusIndex>=0)$(`${prefix}-url-${focusIndex}`)?.focus();
 }
-function populate(config){state=config;render('videos');render('images');$('ticker').value=config.ticker;$('counter').textContent=`${config.ticker.length} / 2000`}
+function populate(config){state=config;$('festival').checked=config.festival==='deepavali';render('videos');render('images');$('ticker').value=config.ticker;$('counter').textContent=`${config.ticker.length} / 2000`}
 for(const [button,kind] of [['add-video','videos'],['add-image','images']])$(button).onclick=()=>{if(!sha||busy||state[kind].length>=100)return;state[kind].push(kind==='videos'?{url:''}:{url:'',duration:10});changed();render(kind,state[kind].length-1)};
+$('festival').onchange=()=>{state.festival=$('festival').checked?'deepavali':'off';changed()};
 $('ticker').oninput=()=>{state.ticker=$('ticker').value;changed();$('counter').textContent=`${state.ticker.length} / 2000`};
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
 // Remove the retired encrypted credential only; leave media settings and other browser data alone.

@@ -37,6 +37,10 @@ GitHub Pages menggunakan **Deploy from a branch → main → / (root)**. Fail ma
 
 Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan, kemudian tersembunyi. Paparan admin menunjukkan tetapan yang sudah disimpan, bukan perubahan yang belum disimpan.
 
+## Mod perayaan Deepavali
+
+Suis **Aktifkan mod Deepavali** dalam admin mengawal tema pelita, rangoli, ucapan dan warna ungu/emas pada paparan TV. Sambungkan GitHub, hidupkan atau matikan suis, kemudian tekan **Simpan & siarkan**. TV membaca tetapan dalam semakan 15 saat berikutnya, tertakluk pada cache GitHub. Mod hanya menukar hiasan; playlist, audio, imej dan teks info dikekalkan. Perubahan mod tidak memuat semula pemain YouTube. Tetapan lama tanpa `festival` menggunakan paparan asal. Tiada pemasangan APK baharu diperlukan.
+
 ## About / Update APK
 
 Buka ikon ⓘ di paparan TV atau pautan **About / Update APK** di admin untuk melihat versi yang diterbitkan, nota keluaran dan pautan APK. Aplikasi Android baharu juga menyediakan About melalui Menu remote dan melaporkan versi yang dipasang. Kemas kini dipasang secara manual. Untuk versi seterusnya, lampirkan APK yang telah ditandatangani pada keluaran GitHub awam bertag `android-vX.Y.Z`; senarai About dikemas kini automatik. Binaan draf/unsigned tidak dipaparkan sebagai kemas kini.
