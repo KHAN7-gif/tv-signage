@@ -1,4 +1,4 @@
-// Explicit demo mode: all data stays in this browser and never calls the cloud API.
+// Demo mode stores media and settings only in this browser.
 export const isDemo = new URLSearchParams(location.search).get('demo') === '1';
 const initial = () => ({landscape:[{url:'./assets/landscape.svg',type:'image',name:'Ruang untuk cerita anda'}],portrait:[{url:'./assets/portrait.svg',type:'image',name:'Sentiasa terkini'}],ticker:'Selamat datang • Ini ialah pratonton UI • Urus playlist anda dari iPhone',duration:10});
 let database;
