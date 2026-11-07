@@ -1,31 +1,25 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
-import {validateConfig} from './media-links.js?v=portrait-2';
+import {validateConfig} from './media-links.js?v=images-only-3';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
 function render(kind,focusIndex=-1){
- const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Media 9:16';const list=$(prefix+'-list');list.replaceChildren();$(prefix+'-count').textContent=state[kind].length;
- if(!state[kind].length){const empty=document.createElement('p');empty.className='empty-list';empty.textContent=`Belum ada ${video?'video':'media'}. Tekan Tambah ${video?'video':'media'} untuk bermula.`;list.append(empty)}
+ const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Imej';const list=$(prefix+'-list');list.replaceChildren();$(prefix+'-count').textContent=state[kind].length;
+ if(!state[kind].length){const empty=document.createElement('p');empty.className='empty-list';empty.textContent=`Belum ada ${video?'video':'imej'}. Tekan Tambah ${video?'video':'imej'} untuk bermula.`;list.append(empty)}
  state[kind].forEach((item,index)=>{
   const row=document.createElement('div');row.className='media-row';
   const heading=document.createElement('div');heading.className='media-row-heading';const name=document.createElement('strong');name.textContent=`${title} ${index+1}`;
   const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};heading.append(name,remove);
   const input=document.createElement('input');input.type='url';input.value=item.url;input.required=true;input.id=`${prefix}-url-${index}`;input.placeholder=video?'https://youtu.be/…':'https://drive.google.com/file/d/…/view';input.setAttribute('aria-label',`Pautan ${title.toLowerCase()} ${index+1}`);input.oninput=()=>{item.url=input.value;changed()};
   row.append(heading,input);
-  if(!video){
-   const typeLabel=document.createElement('label');typeLabel.htmlFor=`image-type-${index}`;typeLabel.textContent='Jenis media Google Drive';
-   const type=document.createElement('select');type.id=typeLabel.htmlFor;type.className='media-type';type.setAttribute('aria-label',`Jenis media 9:16 ${index+1}`);
-   for(const [value,text] of [['image','Imej'],['video','Video (tanpa audio)']]){const option=document.createElement('option');option.value=value;option.textContent=text;type.append(option)}
-   type.value=item.type||'image';type.onchange=()=>{item.type=type.value;changed();render(kind);$(`image-type-${index}`).focus()};row.append(typeLabel,type);
-  }
-  if(!video&&item.type!=='video'){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
+  if(!video){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
   list.append(row);
  });
  $(prefix==='video'?'add-video':'add-image').disabled=state[kind].length>=100;
  if(focusIndex>=0)$(`${prefix}-url-${focusIndex}`)?.focus();
 }
 function populate(config){state=config;render('videos');render('images');$('ticker').value=config.ticker;$('counter').textContent=`${config.ticker.length} / 2000`}
-for(const [button,kind] of [['add-video','videos'],['add-image','images']])$(button).onclick=()=>{if(!sha||busy||state[kind].length>=100)return;state[kind].push(kind==='videos'?{url:''}:{url:'',duration:10,type:'image'});changed();render(kind,state[kind].length-1)};
+for(const [button,kind] of [['add-video','videos'],['add-image','images']])$(button).onclick=()=>{if(!sha||busy||state[kind].length>=100)return;state[kind].push(kind==='videos'?{url:''}:{url:'',duration:10});changed();render(kind,state[kind].length-1)};
 $('ticker').oninput=()=>{state.ticker=$('ticker').value;changed();$('counter').textContent=`${state.ticker.length} / 2000`};
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
 // Remove the retired encrypted credential only; leave media settings and other browser data alone.

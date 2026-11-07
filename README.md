@@ -3,7 +3,7 @@
 Paparan TV mengandungi **tiga komponen sahaja**:
 
 1. Senarai video **YouTube 16:9**, dimainkan mengikut urutan, berulang dengan audio.
-2. Senarai imej dan video **Google Drive 9:16**, dimainkan mengikut urutan tanpa audio.
+2. Senarai imej **Google Drive 9:16**, bertukar mengikut durasi setiap imej.
 3. Teks bergerak.
 
 TV: https://khan7-gif.github.io/tv-signage/
@@ -19,13 +19,13 @@ Token hanya berada dalam memori tab untuk sesi semasa. Token tidak disimpan dala
 ## Tambah dan kemas kini media
 
 1. Sambungkan GitHub menggunakan token.
-2. Tekan **Tambah video** atau **Tambah imej / video**. Edit pautan terus dalam baris tersebut; gunakan **Padam** untuk mengeluarkannya daripada senarai.
-3. Untuk bahagian 9:16, pilih jenis **Imej** atau **Video (tanpa audio)**. Tetapkan durasi imej (3–300 saat, lalai 10 saat) dan teks bergerak.
+2. Tekan **Tambah video** atau **Tambah imej**. Edit pautan terus dalam baris tersebut; gunakan **Padam** untuk mengeluarkannya daripada senarai.
+3. Tetapkan durasi imej (3–300 saat, lalai 10 saat) dan teks bergerak.
 4. Tekan **Simpan & siarkan**. Perubahan tambah/edit/padam hanya diterbitkan selepas menekan butang ini.
 
 Video mesti membenarkan embedding. Paparan TV meminta autoplay dengan audio; jika browser menyekatnya, tekan **Aktifkan audio** atau butang skrin penuh pada TV. Pratonton admin kekal mute; YouTube masih boleh memaparkan kawalan, iklan atau mesej sekatan berdasarkan polisi video/peranti. Kandungan yang memerlukan log masuk, mempunyai sekatan umur atau embedding dimatikan mungkin tidak dimainkan.
 
-Untuk media Drive, gunakan imej JPG/PNG atau video MP4 (H.264) dan set **General access → Anyone with the link → Viewer**. Gunakan pautan `/file/d/ID/view`, bukan folder. Imej dipaparkan melalui thumbnail awam Drive; fail peribadi atau yang disekat mungkin gagal dimuatkan. Video Drive menggunakan pemain HTML video yang sentiasa mute, dimainkan hingga tamat sebelum media seterusnya. Benarkan muat turun pada perkongsian Drive. Fail yang memerlukan log masuk, pengesahan muat turun/imbasan virus atau melebihi kuota Drive tidak dapat dimainkan terus; media gagal dilangkau atau dicuba semula. Bingkai 9:16 menggunakan contain supaya keseluruhan media kelihatan. Jenis media mesti dipilih dalam admin kerana pautan perkongsian Drive tidak menyatakan jenis fail.
+Untuk imej Drive, gunakan JPG/PNG dan set **General access → Anyone with the link → Viewer**. Gunakan pautan `/file/d/ID/view`, bukan folder. Imej dipaparkan melalui thumbnail awam Drive; fail peribadi atau yang disekat mungkin gagal dimuatkan. Bingkai 9:16 menggunakan contain supaya keseluruhan imej kelihatan.
 
 Setiap senarai menyokong sehingga 100 pautan. Padam semua baris untuk mengosongkan slot TV. Pautan lama dalam format satu video/imej masih dibaca dan dimigrasi apabila menyimpan; tiada pautan sedia ada dipadam secara automatik. Padam dalam panel hanya mengeluarkan pautan daripada signage, bukan memadam fail asal YouTube atau Drive.
 
