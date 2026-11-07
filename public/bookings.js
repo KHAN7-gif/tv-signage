@@ -4,25 +4,29 @@ window.addEventListener('signage-config',e=>{const next=e.detail.bookingStatusUr
 const root = document.getElementById('booking-stations');
 const sync = document.getElementById('booking-sync');
 let snapshot = null, received = 0;
-function unavailable(message) { snapshot = null; root.textContent = message; sync.textContent = 'Tidak tersambung'; }
+function connection(connected,label){sync.className='connection-dot '+(connected?'connected':'disconnected');sync.textContent='';sync.setAttribute('aria-label',label);sync.title=label}
+function unavailable(message) { snapshot = null; root.replaceChildren();const text=document.createElement('span');text.className='booking-message';text.textContent=message;root.append(text);connection(false,'Tidak tersambung'); }
 function render() {
   if (!snapshot) return;
-  if (Date.now() - received > 15000) return unavailable('Status lapuk · menunggu sambungan semula');
+  if (Date.now() - received > 15000) return unavailable('Menyambung semula…');
   root.replaceChildren();
-  let free=0,active=0,warn=0;
+  const total=snapshot.stations.length;
+  const columns=matchMedia('(max-aspect-ratio: 1/1)').matches?3:6;
+  root.style.gridTemplateRows=`repeat(${Math.max(1,Math.ceil(total/columns))},minmax(0,1fr))`;
   for (const station of snapshot.stations) {
     const state=overlayState(station);
-    if(state.busy)active++;else free++;
-    if(state.warning)warn++;
     const item = document.createElement('span');
     item.className = 'console'+(state.busy?' busy':'')+(state.warning?' warning':'');
-    const name = document.createElement('strong'); name.textContent = `${station.type ? station.type.toUpperCase()+' · ' : ''}${station.name}`;
-    const status = document.createElement('small');
-    status.textContent = `● ${state.label} ${state.time}`;
-    item.append(name,status); root.append(item);
+    const number=document.createElement('strong');number.className='console-number';number.textContent=station.id;
+    const type=document.createElement('span');type.className='console-type';type.textContent=(station.type || station.name || 'STATION').toUpperCase();
+    item.setAttribute('aria-label',`${station.name || type.textContent} · Station ${station.id}`);
+    const status=document.createElement('span');status.className='console-status';
+    const label=document.createElement('span');label.textContent=`● ${state.label}`;
+    const clock=document.createElement('time');clock.textContent=state.time;
+    status.append(label,clock);item.append(number,type,status);root.append(item);
   }
   if (!snapshot.stations.length) root.textContent = 'Tiada station aktif';
-  sync.textContent=`${free} Free · ${active} Online · ${warn} ≤10 min · ${snapshot.stations.length} station`;
+  connection(true,'Status langsung');
 }
 async function poll() {
   try {
@@ -32,9 +36,11 @@ async function poll() {
     if (!response.ok) throw Error();
     const data = await response.json();
     if (!Array.isArray(data.stations)) throw Error();
-    snapshot = data; received = Date.now(); sync.textContent = '● Langsung'; render();
-  } catch { unavailable('Status tidak tersedia · semak sambungan PS Booking'); }
+    snapshot = data; received = Date.now(); render();
+  } catch { unavailable('Status konsol tidak tersedia'); }
 }
 if (new URLSearchParams(location.search).get('demo') === '1') {
   unavailable('Sambungan PS Booking tersedia selepas sambungan Maida Legacy diaktifkan');
 } else { poll(); setInterval(poll,5000); setInterval(render,1000); }
+
+window.addEventListener('resize',render);

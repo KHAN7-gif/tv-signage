@@ -47,3 +47,7 @@ npm test
 Pratonton statik: http://localhost:8080 . Untuk cuba upload tanpa menulis GitHub, gunakan `/admin.html?demo=1`; demo kekal pada pelayar ini sahaja. Status produksi pada localhost disekat CORS; gunakan domain GitHub Pages untuk sambungan sebenar.
 
 Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV sebenar dan sambungan MySQL produksi masih diperlukan. GitHub Pages perlu diaktifkan pada repo.
+
+## Susun atur status TV
+
+PS Booking memaparkan semua station dalam grid enam lajur pada TV (12 station = dua baris), termasuk eRacing. Pada paparan menegak, grid menggunakan tiga lajur. Kad hanya memaparkan nombor station, jenis konsol, status dan baki masa. Kawalan ikon skrin penuh/tetapan muncul apabila remote, tetikus atau sentuhan digunakan, kemudian tersembunyi selepas 2.5 saat. Data ujian untuk semakan grid tidak disimpan dalam konfigurasi produksi.
