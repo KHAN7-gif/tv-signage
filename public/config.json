@@ -2,13 +2,16 @@
   "festival": "deepavali",
   "videos": [
     {
-      "url": "https://youtu.be/MOclJJ7IpSY?si=WBbFtY60Cw7Yjoxe"
+      "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png"
     },
     {
-      "url": "https://youtu.be/1tBUsXIkG1A?si=XoYfl3bmsssvdKwM"
+      "url": "https://youtu.be/1tBUsXIkG1A?si=XoYfl3bmsssvdKwM",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202109/1321/yZ7dpmjtHr1olhutHT57IFRh.png"
     },
     {
-      "url": "https://youtu.be/_MM4clV2qjE?si=aTCjnvFTTprGgtpy"
+      "url": "https://youtu.be/_MM4clV2qjE?si=aTCjnvFTTprGgtpy",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202212/2101/CxnQHVI3gzboBTHqEEQVWZJ6.png"
     },
     {
       "url": "https://youtu.be/u5rWBgBjDsc?si=tO-3eNF13N9WOPia"
