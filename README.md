@@ -93,3 +93,19 @@ python3 -m http.server 8080 --directory public
 Buka `http://localhost:8080/admin.html?demo=1` untuk studio demo atau `http://localhost:8080/index.html?demo=1` untuk pemutar. Contoh media SVG disertakan. Upload demo disimpan dalam IndexedDB pelayar, bukan cloud. Pratonton terbenam menunjukkan playlist selepas disimpan. Data demo hanya dikongsi antara tab dengan origin dan pelayar yang sama; iPhone dan TV tidak disegerakkan. Mod demo tidak memerlukan kata laluan dan tidak menyediakan akses cloud. Menghapus data pelayar akan membuang demo. Guna localhost atau HTTPS untuk sokongan API pelayar.
 
 UI ini belum diterbitkan ke GitHub Pages atau Cloudflare.
+
+## Status kekosongan PS Booking (Maida Legacy)
+
+Repo aplikasi booking: https://github.com/KHAN7-gif/maidalegacy . GitHub hanya menyimpan kod; status sebenar dibaca daripada backend aplikasi yang telah dihoskan.
+
+Tetapkan `BOOKING_BASE_URL` kepada origin HTTPS aplikasi Maida Legacy dalam Cloudflare Worker Variables. Simpan `BOOKING_API_KEY` sebagai **secret**, sepadan dengan `API_SHARED_KEY` pada backend Maida Legacy:
+
+```sh
+npx wrangler secret put BOOKING_API_KEY
+```
+
+Untuk development, isi kedua-dua nilai dalam `.dev.vars`. Jangan commit fail itu. Deploy semula Worker selepas konfigurasi. Tiada perubahan diperlukan pada repo Maida Legacy: Worker membaca GET `/api/ps_stations` dan `/api/ps` dengan header `X-API-Key`. Panggilan dibuat dari pelayan, jadi tidak memerlukan CORS dan kunci tidak dihantar ke TV.
+
+Player membaca `/api/bookings` setiap 5 saat dan memaparkan station aktif, kosong/bermain serta baki masa. Sesi aktif mesti berstatus `a` dan masa semasa berada antara `st` dan `et`, mengikut overlay dalam aplikasi booking. Laluan awam ini hanya memulangkan ID/nama/jenis station dan masa tamat; tiada data pelanggan atau pembayaran. Respons tidak dicache. Jika backend gagal atau tetapan belum lengkap, player menunjukkan status tidak tersedia, bukannya menganggap semua konsol kosong. Mod demo tidak mereka-reka status konsol.
+
+Sambungan produksi memerlukan URL hosting Maida Legacy dan secret Cloudflare. Pengesahan pada TV sebenar masih diperlukan.

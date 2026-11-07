@@ -1,3 +1,4 @@
+import {readBookings} from './bookings.js';
 const json = (value, status = 200) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store' } });
 const defaults = { landscape: [], portrait: [], ticker: 'Selamat datang • Informasi terkini', duration: 10 };
 export function validate(value) {
@@ -20,6 +21,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     try {
+      if (url.pathname === '/api/bookings') {
+        if (request.method !== 'GET') return json({error:'Metode tidak didukung'},405);
+        try { return json(await readBookings(env)); }
+        catch { return json({error:'Status PS Booking tidak tersedia.'},503); }
+      }
       if (url.pathname === '/api/config') {
         if (request.method === 'GET') {
           const obj = await env.MEDIA.get('config.json');
