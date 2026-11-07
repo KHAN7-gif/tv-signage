@@ -37,6 +37,10 @@ GitHub Pages menggunakan **Deploy from a branch → main → / (root)**. Fail ma
 
 Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan, kemudian tersembunyi. Paparan admin menunjukkan tetapan yang sudah disimpan, bukan perubahan yang belum disimpan.
 
+## Susun playlist
+
+Seret pemegang ⠿ pada setiap baris untuk mengubah urutan video atau imej dalam senarai masing-masing. Drag menyokong mouse dan sentuhan, auto-scroll di tepi skrin, serta Escape untuk membatalkan. Butang ↑/↓ dan kekunci anak panah pada pemegang disediakan sebagai alternatif. Cover, label NEW/COMING SOON, pautan dan durasi bergerak bersama item. Susunan hanya diterbitkan selepas **Simpan & siarkan**.
+
 ## Cover game mengikut video
 
 Setiap baris video dalam admin mempunyai medan pilihan **Pautan imej cover** dan pratonton imej. Tampal pautan terus imej HTTPS daripada laman PlayStation menggunakan **Copy image address**, kemudian **Simpan & siarkan**. Cover mengekalkan nisbah asal imej tanpa crop dan muncul di kiri bawah bingkai 16:9 apabila video berkaitan dimainkan dan bertukar menggunakan identiti video/playlist daripada YouTube IFrame API. Biarkan medan kosong untuk video tanpa cover. Setiap video mempunyai pilihan **COMING SOON** dan **NEW** yang saling menggantikan: pilihan aktif dipaparkan di luar kotak imej; kosongkan kedua-duanya untuk menyembunyikan label. Label juga boleh dipaparkan tanpa imej. Pautan yang gagal dimuatkan disembunyikan. Kemaskini pautan cover sahaja tidak memulakan semula video. Cover bergantung pada akses imej awam dan YouTube API; ia tidak muncul jika identiti video belum dapat disahkan.

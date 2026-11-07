@@ -1,15 +1,26 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
 import {validateConfig} from './media-links.js?v=covers-2';
+import {moveItem,attachReorderHandle} from './reorder.js?v=reorder-1';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
+function reorder(kind,from,to){
+ if(!sha||busy||!moveItem(state[kind],from,to))return;
+ changed();render(kind);const prefix=kind==='videos'?'video':'image';
+ const handle=$(`${prefix}-sort-${to}`);handle.focus({preventScroll:true});handle.scrollIntoView({block:'nearest'});
+ notice(`${kind==='videos'?'Video':'Imej'} ${from+1} dipindahkan ke kedudukan ${to+1}. Tekan Simpan & siarkan untuk menerbitkan susunan.`);
+}
 function render(kind,focusIndex=-1){
  const video=kind==='videos',prefix=video?'video':'image',title=video?'Video':'Imej';const list=$(prefix+'-list');list.replaceChildren();$(prefix+'-count').textContent=state[kind].length;
  if(!state[kind].length){const empty=document.createElement('p');empty.className='empty-list';empty.textContent=`Belum ada ${video?'video':'imej'}. Tekan Tambah ${video?'video':'imej'} untuk bermula.`;list.append(empty)}
  state[kind].forEach((item,index)=>{
   const row=document.createElement('div');row.className='media-row';
   const heading=document.createElement('div');heading.className='media-row-heading';const name=document.createElement('strong');name.textContent=`${title} ${index+1}`;
-  const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};heading.append(name,remove);
+  const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};const handle=document.createElement('button');handle.type='button';handle.className='sort-handle';handle.id=`${prefix}-sort-${index}`;handle.textContent='⠿';handle.title='Seret untuk susun; guna ↑ atau ↓ pada keyboard';handle.setAttribute('aria-label',`Susun ${title} ${index+1}`);handle.setAttribute('aria-describedby','reorder-help');
+  const actions=document.createElement('div');actions.className='row-actions';
+  for(const [offset,text,description] of [[-1,'↑','Naikkan'],[1,'↓','Turunkan']]){const button=document.createElement('button');button.type='button';button.className='move-media';button.textContent=text;button.disabled=index+offset<0||index+offset>=state[kind].length;button.setAttribute('aria-label',`${description} ${title} ${index+1}`);button.onclick=()=>reorder(kind,index,index+offset);actions.append(button)}
+  actions.append(remove);heading.append(handle,name,actions);
+  attachReorderHandle(handle,row,index,{list,canMove:()=>Boolean(sha)&&!busy,onMove:(from,to)=>reorder(kind,from,to),label:`${title} ${index+1}`});
   const input=document.createElement('input');input.type='url';input.value=item.url;input.required=true;input.id=`${prefix}-url-${index}`;input.placeholder=video?'https://youtu.be/…':'https://drive.google.com/file/d/…/view';input.setAttribute('aria-label',`Pautan ${title.toLowerCase()} ${index+1}`);input.oninput=()=>{item.url=input.value;changed()};
   row.append(heading,input);
   if(video){
