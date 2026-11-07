@@ -5,7 +5,7 @@ on:
     paths: ['android/**', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +25,18 @@ jobs:
       - name: Build and lint
         working-directory: android
         run: gradle --no-daemon :app:assembleRelease :app:lintRelease
+      - name: Prepare draft APK for private signing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK_VERSION=$(sed -n "s/.*versionName '\([^']*\)'.*/\1/p" android/app/build.gradle)
+          APK_TAG="android-v${APK_VERSION}"
+          if ! gh release view "$APK_TAG" >/dev/null 2>&1; then
+            gh release create "$APK_TAG" --draft --title "Maida TV Signage ${APK_VERSION}" --notes "APK signing in progress."
+          fi
+          if [ "$(gh release view "$APK_TAG" --json isDraft --jq .isDraft)" = true ]; then
+            gh release upload "$APK_TAG" android/app/build/outputs/apk/release/app-release-unsigned.apk --clobber
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: maida-tv-signage-unsigned
