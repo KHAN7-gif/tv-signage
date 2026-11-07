@@ -2,11 +2,6 @@
   "festival": "deepavali",
   "videos": [
     {
-      "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
-      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png",
-      "isNew": true
-    },
-    {
       "url": "https://youtu.be/1tBUsXIkG1A?si=XoYfl3bmsssvdKwM",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202109/1321/yZ7dpmjtHr1olhutHT57IFRh.png"
     },
@@ -42,7 +37,9 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202206/0300/E2vZwVaDJbhLZpJo7Q10IyYo.png"
     },
     {
-      "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9"
+      "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png",
+      "isNew": true
     },
     {
       "url": "https://www.youtube.com/watch?v=xmwvpHGjF8Q"
@@ -55,6 +52,11 @@
     },
     {
       "url": "https://youtu.be/XCowAxPll4E?si=VVU8BYbH1v74WjhO"
+    },
+    {
+      "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png",
+      "isNew": true
     }
   ],
   "images": [
