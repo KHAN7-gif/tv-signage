@@ -1,9 +1,10 @@
 import {readConfig} from './github.js';
-import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=deepavali-1';
+import {youtubeEmbed,driveImage,validateConfig} from './media-links.js?v=covers-1';
+import {createVideoCover} from './video-cover.js?v=covers-1';
 const $=id=>document.getElementById(id);
 const embedded=new URLSearchParams(location.search).get('embed')==='1';
 if(embedded)document.body.classList.add('embedded');
-let current={videos:null,images:null,ticker:null},video,imageTimer,imageGeneration=0;
+let current={videos:null,images:null,ticker:null},video,cover,imageTimer,imageGeneration=0;
 function placeholder(id,title,detail,error=false){const panel=document.createElement('div');panel.className='placeholder'+(error?' error':'');const label=document.createElement('span');label.textContent=title;const note=document.createElement('small');note.textContent=detail;panel.append(label,note);$(id).replaceChildren(panel)}
 function playImages(images){
  clearTimeout(imageTimer);const generation=++imageGeneration;let index=0,attempt=0;
@@ -20,10 +21,12 @@ function playImages(images){
 }
 function apply(config){
  document.body.dataset.festival=config.festival||'off';
- if(JSON.stringify(current.videos)!==JSON.stringify(config.videos)){
-  if(config.videos.length){const urls=config.videos.map(item=>item.url);video=document.createElement('iframe');video.title='Senarai video YouTube';video.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';video.allowFullscreen=true;video.referrerPolicy='strict-origin-when-cross-origin';video.src=youtubeEmbed(urls[0],location.origin,urls,embedded);$('landscape').replaceChildren(video)}
+ if(JSON.stringify(current.videos?.map(item=>item.url))!==JSON.stringify(config.videos.map(item=>item.url))){
+  cover?.destroy();cover=null;
+  if(config.videos.length){const urls=config.videos.map(item=>item.url);video=document.createElement('iframe');video.title='Senarai video YouTube';video.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';video.allowFullscreen=true;video.referrerPolicy='strict-origin-when-cross-origin';video.src=youtubeEmbed(urls[0],location.origin,urls,embedded);$('landscape').replaceChildren(video);cover=createVideoCover(video,$('landscape'));}
   else{video=null;placeholder('landscape','16:9','Tambah video di panel admin')}
  }
+ cover?.update(config.videos);
  if(JSON.stringify(current.images)!==JSON.stringify(config.images))playImages(config.images);
  if(current.ticker!==config.ticker)$('ticker').textContent=config.ticker;
  current=config;

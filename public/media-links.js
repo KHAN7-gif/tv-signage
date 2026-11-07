@@ -24,6 +24,14 @@ export function driveImage(value) {
  if(!id||! /^[\w-]{10,}$/.test(id)||url.pathname.includes('/folders/'))throw Error('Gunakan pautan satu fail imej, bukan folder Google Drive.');
  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w1600`;
 }
+export function coverImageUrl(value) {
+ if(value===undefined||value==='')return '';
+ if(typeof value!=='string')throw Error('Pautan cover mesti berupa URL imej HTTPS.');
+ const text=value.trim();if(!text)return '';
+ let url;try{url=new URL(text)}catch{throw Error('Pautan imej cover tidak sah.')}
+ if(url.protocol!=='https:'||url.username||url.password||text.length>4096)throw Error('Gunakan pautan terus imej cover HTTPS.');
+ return text;
+}
 export function validateConfig(value) {
  if(!value||typeof value.ticker!=='string'||value.ticker.length>2000)throw Error('Tetapan paparan tidak sah.');
  const videos=Array.isArray(value.videos)?value.videos:typeof value.youtubeUrl==='string'?(value.youtubeUrl.trim()?[{url:value.youtubeUrl}]:[]):null;
@@ -34,7 +42,9 @@ export function validateConfig(value) {
   ...(value.festival!==undefined?{festival:value.festival}:{}),
   videos:videos.map((item,i)=>{
    if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Video ${i+1} atau padam baris tersebut.`);
-   const url=item.url.trim();youtubeId(url);return {url};
+   const url=item.url.trim();youtubeId(url);const coverUrl=coverImageUrl(item.coverUrl);
+   if(item.comingSoon!==undefined&&typeof item.comingSoon!=='boolean')throw Error(`Pilihan COMING SOON Video ${i+1} tidak sah.`);
+   return {url,...(coverUrl?{coverUrl}:{}),...(item.comingSoon?{comingSoon:true}:{})};
   }),
   images:images.map((item,i)=>{
    if(typeof item?.url!=='string'||!item.url.trim())throw Error(`Isi pautan Imej ${i+1} atau padam baris tersebut.`);

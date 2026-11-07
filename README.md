@@ -37,6 +37,10 @@ GitHub Pages menggunakan **Deploy from a branch → main → / (root)**. Fail ma
 
 Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan, kemudian tersembunyi. Paparan admin menunjukkan tetapan yang sudah disimpan, bukan perubahan yang belum disimpan.
 
+## Cover game mengikut video
+
+Setiap baris video dalam admin mempunyai medan pilihan **Pautan imej cover** dan pratonton imej. Tampal pautan terus imej HTTPS daripada laman PlayStation menggunakan **Copy image address**, kemudian **Simpan & siarkan**. Cover mengekalkan nisbah asal imej tanpa crop dan muncul di kiri bawah bingkai 16:9 apabila video berkaitan dimainkan dan bertukar menggunakan identiti video/playlist daripada YouTube IFrame API. Biarkan medan kosong untuk video tanpa cover. Setiap video mempunyai checkbox **COMING SOON**: apabila ditanda, teks muncul di luar kotak imej; apabila tidak ditanda, tiada label dipaparkan. Label juga boleh dipaparkan tanpa imej. Pautan yang gagal dimuatkan disembunyikan. Kemaskini pautan cover sahaja tidak memulakan semula video. Cover bergantung pada akses imej awam dan YouTube API; ia tidak muncul jika identiti video belum dapat disahkan.
+
 ## Mod perayaan Deepavali
 
 Suis **Aktifkan mod Deepavali** dalam admin mengawal tema pelita, rangoli, ucapan dan warna ungu/emas pada paparan TV. Sambungkan GitHub, hidupkan atau matikan suis, kemudian tekan **Simpan & siarkan**. TV membaca tetapan dalam semakan 15 saat berikutnya, tertakluk pada cache GitHub. Mod hanya menukar hiasan; playlist, audio, imej dan teks info dikekalkan. Perubahan mod tidak memuat semula pemain YouTube. Tetapan lama tanpa `festival` menggunakan paparan asal. Tiada pemasangan APK baharu diperlukan.

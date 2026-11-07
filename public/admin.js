@@ -1,5 +1,5 @@
 import {readConfig,configVersion,saveConfig} from './github.js?v=token-only-1';
-import {validateConfig} from './media-links.js?v=deepavali-1';
+import {validateConfig} from './media-links.js?v=covers-1';
 const $=id=>document.getElementById(id);let activeToken='',sha,dirty=false,busy=false,state={videos:[],images:[],ticker:''};
 const notice=text=>$('notice').textContent=text;
 function changed(){dirty=true;$('save-status').textContent='Belum disimpan'}
@@ -12,6 +12,23 @@ function render(kind,focusIndex=-1){
   const remove=document.createElement('button');remove.type='button';remove.className='delete-media';remove.textContent='Padam';remove.setAttribute('aria-label',`Padam ${title.toLowerCase()} ${index+1}`);remove.onclick=()=>{state[kind].splice(index,1);changed();render(kind);($(prefix+'-url-'+Math.min(index,state[kind].length-1))||$('add-'+prefix)).focus()};heading.append(name,remove);
   const input=document.createElement('input');input.type='url';input.value=item.url;input.required=true;input.id=`${prefix}-url-${index}`;input.placeholder=video?'https://youtu.be/…':'https://drive.google.com/file/d/…/view';input.setAttribute('aria-label',`Pautan ${title.toLowerCase()} ${index+1}`);input.oninput=()=>{item.url=input.value;changed()};
   row.append(heading,input);
+  if(video){
+   const coverLabel=document.createElement('label');coverLabel.htmlFor=`video-cover-${index}`;coverLabel.className='cover-label';coverLabel.textContent='Pautan imej cover (pilihan)';
+   const cover=document.createElement('input');cover.type='url';cover.id=coverLabel.htmlFor;cover.value=item.coverUrl||'';cover.placeholder='https://gmedia.playstation.com/…';cover.setAttribute('aria-label',`Pautan imej cover Video ${index+1}`);
+   const help=document.createElement('small');help.className='field-note';help.textContent='Tampal pautan terus imej dari PlayStation (Copy image address), bukan pautan halaman game. Kosongkan untuk menyembunyikan cover video ini.';
+   const preview=document.createElement('div');preview.className='cover-preview';let timer,request=0;
+   const show=()=>{const version=++request;preview.replaceChildren();const value=cover.value.trim();if(!value)return;let parsed;try{parsed=new URL(value)}catch{return}if(parsed.protocol!=='https:')return;
+    const image=document.createElement('img');image.alt=`Pratonton cover Video ${index+1}`;image.referrerPolicy='no-referrer';
+    image.onload=()=>{if(version===request)preview.replaceChildren(image)};
+    image.onerror=()=>{if(version===request)preview.textContent='Imej tidak dapat dibuka. Semak pautan terus dan akses imej.'};image.src=value;
+   };
+   cover.oninput=()=>{item.coverUrl=cover.value;changed();clearTimeout(timer);request++;preview.replaceChildren();timer=setTimeout(show,400)};
+   const soonLabel=document.createElement('label');soonLabel.className='coming-soon-option';soonLabel.htmlFor=`video-coming-soon-${index}`;
+   const soon=document.createElement('input');soon.type='checkbox';soon.id=soonLabel.htmlFor;soon.checked=item.comingSoon===true;soon.onchange=()=>{item.comingSoon=soon.checked;changed()};
+   const soonText=document.createElement('span');soonText.textContent='COMING SOON';soonLabel.append(soon,soonText);
+   const soonHelp=document.createElement('small');soonHelp.className='field-note';soonHelp.textContent='Tandakan untuk memaparkan COMING SOON di luar kotak imej. Jika tidak ditanda, tiada teks dipaparkan.';
+   row.append(coverLabel,cover,help,preview,soonLabel,soonHelp);show();
+  }
   if(!video){const durationRow=document.createElement('div');durationRow.className='duration-row';const label=document.createElement('label');label.htmlFor=`image-duration-${index}`;label.textContent='Durasi (saat)';const duration=document.createElement('input');duration.id=label.htmlFor;duration.type='number';duration.min=3;duration.max=300;duration.required=true;duration.value=item.duration;duration.setAttribute('aria-label',`Durasi imej ${index+1}`);duration.oninput=()=>{item.duration=Number(duration.value);changed()};durationRow.append(label,duration);row.append(durationRow)}
   list.append(row);
  });
