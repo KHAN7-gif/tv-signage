@@ -8,7 +8,7 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 
 ## Install
 
-1. Download the signed APK linked from the repository's Android release.
+1. Download [Maida TV Signage v1.1.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.1.0.apk).
 2. Transfer it to the TV using USB or a file transfer app.
 3. Allow **Install unknown apps** for your file manager, open the APK and install.
 4. Open **Maida TV Signage** from Apps. Edit links and text from the website admin on a phone/computer.
