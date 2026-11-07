@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {youtubeId,youtubeEmbed,driveImage,validateConfig} from '../public/media-links.js';
-test('YouTube links become muted looping embeds while non-video and hostile hosts are rejected',()=>{
+test('YouTube links become audible looping embeds while non-video and hostile hosts are rejected',()=>{
  for(const url of ['https://www.youtube.com/watch?v=jfKfPfyJRdk','https://youtu.be/jfKfPfyJRdk?si=abc','https://youtube.com/live/jfKfPfyJRdk','https://youtube.com/shorts/jfKfPfyJRdk'])assert.equal(youtubeId(url),'jfKfPfyJRdk');
- const embed=new URL(youtubeEmbed('https://youtu.be/jfKfPfyJRdk','https://khan7-gif.github.io'));assert.equal(embed.origin,'https://www.youtube-nocookie.com');assert.equal(embed.searchParams.get('mute'),'1');assert.equal(embed.searchParams.get('playlist'),'jfKfPfyJRdk');
+ const embed=new URL(youtubeEmbed('https://youtu.be/jfKfPfyJRdk','https://khan7-gif.github.io'));assert.equal(embed.origin,'https://www.youtube-nocookie.com');assert.equal(embed.searchParams.get('mute'),'0');assert.equal(embed.searchParams.get('playlist'),'jfKfPfyJRdk');
  for(const bad of ['https://youtube.com/@channel','https://youtube.com/playlist?list=123','https://youtube.com.evil.test/watch?v=jfKfPfyJRdk','javascript:alert(1)'])assert.throws(()=>youtubeId(bad));
 });
 test('Google Drive file links are accepted, folders and unrelated links are rejected',()=>{
@@ -22,4 +22,9 @@ test('empty lists clear slots; incomplete links and invalid image durations cann
  assert.throws(()=>validateConfig({videos:[{url:''}],images:[],ticker:''}),/Video 1/);
  assert.throws(()=>validateConfig({videos:[],images:[{url:'https://drive.google.com/open?id=AbCdEfGhIjKlMn0123',duration:0}],ticker:''}),/3 hingga 300/);
  assert.throws(()=>validateConfig({videos:[],images:[],ticker:'x'.repeat(2001)}));
+});
+
+test('admin preview can explicitly remain muted',()=>{
+ const url=new URL(youtubeEmbed('https://youtu.be/jfKfPfyJRdk','https://khan7-gif.github.io',undefined,true));
+ assert.equal(url.searchParams.get('mute'),'1');
 });

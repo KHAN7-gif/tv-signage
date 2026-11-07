@@ -13,7 +13,7 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 3. Allow **Install unknown apps** for your file manager, open the APK and install.
 4. Open **Maida TV Signage** from Apps. Edit links and text from the website admin on a phone/computer.
 
-Updates use the same signing key and package ID. Install 1.1.0 over 1.0.0; no uninstall is needed. Video autoplay is muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
+Updates use the same signing key and package ID. Install 1.1.0 over 1.0.0; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
 
 ## Build and signing
 

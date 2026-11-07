@@ -10,10 +10,10 @@ export function youtubeId(value) {
  if(!id||! /^[\w-]{11}$/.test(id))throw Error('Gunakan pautan video YouTube, bukan channel atau playlist.');
  return id;
 }
-export function youtubeEmbed(value,origin,playlist=[value]) {
+export function youtubeEmbed(value,origin,playlist=[value],muted=false) {
  const id=youtubeId(value);if(!id)return '';
  const url=new URL(`https://www.youtube-nocookie.com/embed/${id}`);
- for(const [key,val]of Object.entries({autoplay:'1',mute:'1',loop:'1',playlist:(playlist.length>1?playlist.slice(1):playlist).map(youtubeId).join(','),playsinline:'1',rel:'0',controls:'1',enablejsapi:'1',origin}))url.searchParams.set(key,val);
+ for(const [key,val]of Object.entries({autoplay:'1',mute:muted?'1':'0',loop:'1',playlist:(playlist.length>1?playlist.slice(1):playlist).map(youtubeId).join(','),playsinline:'1',rel:'0',controls:'1',enablejsapi:'1',origin}))url.searchParams.set(key,val);
  return url.href;
 }
 export function driveImage(value) {

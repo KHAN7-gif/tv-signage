@@ -2,7 +2,7 @@
 
 Paparan TV mengandungi **tiga komponen sahaja**:
 
-1. Senarai video **YouTube 16:9**, dimainkan mengikut urutan, berulang dan tanpa suara.
+1. Senarai video **YouTube 16:9**, dimainkan mengikut urutan, berulang dengan audio.
 2. Senarai imej **Google Drive 9:16**, bertukar mengikut durasi setiap imej.
 3. Teks bergerak.
 
@@ -23,7 +23,7 @@ Token hanya berada dalam memori tab untuk sesi semasa. Token tidak disimpan dala
 3. Tetapkan durasi imej (3–300 saat, lalai 10 saat) dan teks bergerak.
 4. Tekan **Simpan & siarkan**. Perubahan tambah/edit/padam hanya diterbitkan selepas menekan butang ini.
 
-Video mesti membenarkan embedding. Autoplay menggunakan mod mute; YouTube masih boleh memaparkan kawalan, iklan atau mesej sekatan berdasarkan polisi video/peranti. Kandungan yang memerlukan log masuk, mempunyai sekatan umur atau embedding dimatikan mungkin tidak dimainkan.
+Video mesti membenarkan embedding. Paparan TV meminta autoplay dengan audio; jika browser menyekatnya, tekan **Aktifkan audio** atau butang skrin penuh pada TV. Pratonton admin kekal mute; YouTube masih boleh memaparkan kawalan, iklan atau mesej sekatan berdasarkan polisi video/peranti. Kandungan yang memerlukan log masuk, mempunyai sekatan umur atau embedding dimatikan mungkin tidak dimainkan.
 
 Untuk imej Drive, gunakan JPG/PNG dan set **General access → Anyone with the link → Viewer**. Gunakan pautan `/file/d/ID/view`, bukan folder. Imej dipaparkan melalui thumbnail awam Drive; fail peribadi atau yang disekat mungkin gagal dimuatkan. Bingkai 9:16 menggunakan contain supaya keseluruhan imej kelihatan.
 
