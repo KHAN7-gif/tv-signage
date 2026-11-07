@@ -21,15 +21,6 @@ export async function configVersion(token) {
 }
 export async function saveConfig(config,token,sha) {
  if (!sha) throw Error('Sambungkan GitHub dahulu.');
- const result = await request('public/config.json',token,{method:'PUT',body:JSON.stringify({message:'Update TV signage playlist',branch,sha,content:encode(JSON.stringify(config,null,2)+'\n')})});
+ const result = await request('public/config.json',token,{method:'PUT',body:JSON.stringify({message:'Update TV signage links and text',branch,sha,content:encode(JSON.stringify(config,null,2)+'\n')})});
  return result.content.sha;
-}
-export async function uploadMedia(file,token) {
- if(file.size>20*1024*1024)throw Error('Maksimum 20 MB setiap fail untuk storan GitHub.');
- const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','video/mp4':'mp4','video/webm':'webm'}[file.type];
- if(!ext)throw Error('Format media tidak disokong.');
- const name=`${crypto.randomUUID()}.${ext}`;
- const bytes=new Uint8Array(await file.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode(...bytes.subarray(i,i+32768));
- await request(`public/media/${name}`,token,{method:'PUT',body:JSON.stringify({message:`Add signage media ${name}`,branch,content:btoa(binary)})});
- return {url:`${raw}media/${name}`,type:file.type.startsWith('video/')?'video':'image'};
 }

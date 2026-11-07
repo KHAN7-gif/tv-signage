@@ -2,7 +2,7 @@ name: Build Android TV APK
 on:
   push:
     branches: [main]
-    paths: ['android/**', '.github/workflows/android.yml']
+    paths: ['android/**', '!android/**/*.md', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
   contents: write

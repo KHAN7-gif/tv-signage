@@ -1,34 +1,29 @@
 # Maida TV Signage — Android TV
 
-Native Android TV WebView launcher for https://khan7-gif.github.io/tv-signage/ . Package ID: `my.maida.signage`. Android 6.0 (API 23) or newer. Landscape fullscreen, HTML5 autoplay, screen kept awake, TV remote navigation, Menu key to reload, Back key to confirm exit. A native retry screen appears if the main website fails to load. Backend status errors remain visible in the website itself.
+Native Android TV WebView launcher for https://khan7-gif.github.io/tv-signage/ . Package: `my.maida.signage`. Android 6.0 (API 23) or newer with an up-to-date Android System WebView.
 
-No server, media or booking data is embedded into the APK. The website is loaded from GitHub Pages; internet and an up-to-date Android System WebView are required. Existing backend access restrictions are not bypassed by this app. Media/playlist changes do not require an APK rebuild. Updating native app code requires a new APK.
+The website displays a YouTube video, a public Google Drive image and scrolling text. The app keeps the screen awake, uses landscape fullscreen and supports TV remote navigation. Menu reloads the website; Back confirms exit. If the website fails to load, a native retry screen appears.
 
-## Install on Google TV / Android TV
+**Version 1.1.0** permits embedded YouTube navigation while keeping main-frame navigation restricted to this signage site. Video and image links are entered on the website admin panel. Media is not packaged into the APK. Internet is required. The app does not start automatically at TV boot.
 
-1. Download the [signed APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.0.0.apk) from GitHub Pages on a phone/computer. The Releases page also links to the download.
-2. Transfer it to the TV using USB, a local network transfer tool, or a download-capable TV browser.
-3. In the TV settings, allow **Install unknown apps** for the file manager/download app you use.
-4. Open the APK, install, then launch **Maida TV Signage** from the TV's Apps screen.
-5. Keep the TV connected to the internet. Configure the TV's sleep/screensaver settings for the intended operating hours.
+## Install
 
-This is a sideload app, not a Play Store release. The app does not automatically start at TV boot. If an old TV cannot play a video, use MP4 H.264 and update Android System WebView/Chrome if supported by that model.
+1. Download the signed APK linked from the repository's Android release.
+2. Transfer it to the TV using USB or a file transfer app.
+3. Allow **Install unknown apps** for your file manager, open the APK and install.
+4. Open **Maida TV Signage** from Apps. Edit links and text from the website admin on a phone/computer.
 
-## Build
+Updates use the same signing key and package ID. Install 1.1.0 over 1.0.0; no uninstall is needed. Video autoplay is muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
 
-GitHub Actions workflow **Build Android TV APK** builds and lints an unsigned release APK. Its `maida-tv-signage-unsigned` artifact is for signing, not direct installation.
+## Build and signing
 
-With Android SDK 35, Java 17 and Gradle 8.9 locally:
+Java 17, Gradle 8.9 and Android SDK 35:
 
 ```sh
 cd android
 gradle :app:assembleRelease :app:lintRelease
 ```
 
-Sign the APK with Android SDK `apksigner` using the original private release keystore and verify the signature before distributing. Keep the keystore and password outside Git; `.gitignore` excludes keystores. Increment `versionCode` for each native app update and keep the same signing key so Android can install updates without uninstalling.
+The **Build Android TV APK** workflow builds/lints an unsigned release, uploads it as an Actions artifact, and stages it in a draft release. Sign it outside GitHub using the original private release keystore, then distribute only the verified signed APK. The private key and password are never committed. Increase versionCode for subsequent native updates.
 
-The release signing key is retained privately in the task workspace and is not uploaded to this public repository. Back it up securely for future versions. Signing is performed outside GitHub Actions. The workflow stages unsigned builds in a draft release; only the verified signed APK is published for installation.
-
-## Validation
-
-Build/lint output is recorded in the GitHub Actions run. Verify the final APK with `apksigner verify --verbose --print-certs` and inspect package/launcher metadata with `aapt dump badging`. Actual playback, remote keys and device power behavior still require a test on the user's TV.
+Validate with `apksigner verify --verbose --print-certs` and `aapt dump badging`. Actual playback and remote behavior require testing on the user's TV.

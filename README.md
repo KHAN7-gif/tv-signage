@@ -1,41 +1,39 @@
-# Maida Legacy TV Signage — GitHub Pages
+# Maida TV Signage
 
-Media, playlist dan tetapan disimpan dalam repo **KHAN7-gif/tv-signage**. Paparan 16:9, 9:16, teks berjalan, panel admin iPhone, dan status PS Booking terus daripada **https://royalblue-oryx-448762.hostingersite.com**.
+Paparan TV mengandungi **tiga komponen sahaja**:
 
-## Terbitkan
+1. Video **YouTube 16:9**, berulang dan tanpa suara.
+2. Imej **Google Drive 9:16**.
+3. Teks bergerak.
 
-1. Gabungkan perubahan ini ke `main`.
-2. GitHub repo → Settings → Pages → Source: **Deploy from a branch**, branch **main**, folder **/ (root)**.
-3. GitHub Pages menerbitkan semula secara automatik selepas commit ke main.
-4. TV: https://khan7-gif.github.io/tv-signage/
-5. Admin: https://khan7-gif.github.io/tv-signage/admin.html
+TV: https://khan7-gif.github.io/tv-signage/
 
-Fail masuk root menggunakan aset dalam `public/`; kekalkan kedua-duanya sepadan apabila mengubah HTML. URL tersedia selepas proses Pages berjaya. Repo ini awam, jadi semua media dan playlist juga awam.
+Admin: https://khan7-gif.github.io/tv-signage/admin.html
 
-## Simpan dari admin
+## Masukkan pautan melalui admin
 
-Cipta GitHub **fine-grained personal access token** dengan akses hanya repo `tv-signage` dan permission **Contents: Read and write**. Masukkan ke panel admin dan tekan **Sambung GitHub sebelum mengedit**. Token kekal dalam memori tab; tidak disimpan dalam localStorage, config atau repo. Masukkan hanya pada halaman admin milik anda.
+1. Buka panel admin pada telefon atau komputer.
+2. Masukkan GitHub fine-grained personal access token untuk repo `KHAN7-gif/tv-signage`, permission **Contents: Read and write**, kemudian tekan **Sambung GitHub**. Token hanya berada dalam memori tab.
+3. Masukkan pautan satu video YouTube dan pautan satu fail imej Google Drive.
+4. Tulis teks bergerak, kemudian tekan **Simpan & siarkan**.
 
-Upload JPG, PNG, WebP, MP4 atau WebM (maksimum **20 MB/fail**). Setiap upload ialah commit media di `public/media/`. Susun playlist, tetapkan teks dan durasi, kemudian **Simpan & siarkan** untuk commit `public/config.json`. Mengeluarkan media daripada playlist tidak memadam fail/histori Git. Elakkan video panjang atau upload kerap kerana saiz sejarah repo bertambah; GitHub Pages mempunyai had saiz/bandwidth dan bukan storan video berskala besar.
+Video mesti membenarkan embedding. Autoplay menggunakan mod mute; YouTube masih boleh memaparkan kawalan, iklan atau mesej sekatan berdasarkan polisi video/peranti. Kandungan yang memerlukan log masuk, mempunyai sekatan umur atau embedding dimatikan mungkin tidak dimainkan.
 
-TV membaca config dan media daripada branch `main` melalui raw GitHub. Semakan playlist setiap 15 saat, tetapi cache GitHub boleh melambatkan perubahan beberapa minit. Konflik semasa admin lain menyimpan akan ditolak; muat semula sebelum mengedit semula. Jangan edit tanpa menyambungkan GitHub dahulu.
+Untuk imej Drive, gunakan JPG/PNG dan set **General access → Anyone with the link → Viewer**. Gunakan pautan `/file/d/ID/view`, bukan folder. Imej dipaparkan melalui thumbnail awam Drive; fail peribadi atau yang disekat mungkin gagal dimuatkan. Bingkai 9:16 menggunakan contain supaya keseluruhan imej kelihatan.
 
-## Status langsung Maida Legacy
+Medan media boleh dikosongkan. Slot yang belum dikonfigurasi hanya menunjukkan arahan ringkas; tiada contoh video atau imej pihak ketiga disiarkan secara automatik. Konfigurasi awal dikosongkan supaya pemilik memasukkan pautan sendiri dalam admin.
 
-TV membaca `https://royalblue-oryx-448762.hostingersite.com/display-api/status` setiap 5 saat. Ini sambungan terus ke hosting Maida Legacy. Status pelanggan/tempahan kekal dalam MySQL Maida Legacy; GitHub hanya menyimpan media dan tetapan signage.
+## Storan dan penerbitan
 
-Laluan status belum tersedia pada hosting ketika semakan. Untuk mengaktifkannya di repo **KHAN7-gif/maidalegacy**:
+Tetapan disimpan dalam `public/config.json` di GitHub. Fail media kekal pada YouTube dan Google Drive. Pautan tidak dicetak dalam paparan TV, tetapi config repo ini awam dan boleh dibaca; jangan gunakan pautan rahsia.
 
-1. Salin `integrations/maidalegacy/display-status.cjs` ke `server/display-status.cjs`.
-2. Dalam `server/index.js`, sebelum middleware `/api`, tambah:
+GitHub Pages menggunakan **Deploy from a branch → main → / (root)**. Fail masuk root mempunyai base `./public/`; kekalkan ia sepadan dengan HTML dalam `public/`. TV menyemak konfigurasi setiap 15 saat. Cache GitHub boleh menyebabkan perubahan mengambil beberapa minit. Konflik antara dua admin akan ditolak; muat semula sebelum mengedit semula.
 
-```js
-app.use('/display-api', apiRateLimit, require('./display-status.cjs'));
-```
+Kawalan skrin penuh dan tetapan muncul apabila remote/tetikus/sentuhan digunakan, kemudian tersembunyi. Paparan admin menunjukkan tetapan yang sudah disimpan, bukan perubahan yang belum disimpan.
 
-3. Deploy semula aplikasi Maida Legacy di hosting sedia ada.
+## Android TV
 
-Endpoint awam ini hanya mendedahkan ID/nama/jenis station dan masa tamat sesi. Tiada nama pelanggan, bayaran atau kunci API. CORS dibenarkan untuk `https://khan7-gif.github.io`. Station tidak aktif dikecualikan. Booking mesti berstatus `a`, sudah bermula dan belum tamat. Apabila sambungan gagal, TV memaparkan status tidak tersedia, bukan semua konsol kosong.
+Lihat [panduan Android TV](android/README.md). Aplikasi membuka URL GitHub Pages dan memerlukan internet serta Android System WebView yang dikemas kini. APK 1.1.0 menambah sokongan navigasi iframe YouTube; gunakan versi ini untuk paparan video YouTube.
 
 ## Development dan semakan
 
@@ -44,14 +42,4 @@ npm run dev
 npm test
 ```
 
-Pratonton statik: http://localhost:8080 . Untuk cuba upload tanpa menulis GitHub, gunakan `/admin.html?demo=1`; demo kekal pada pelayar ini sahaja. Status produksi pada localhost disekat CORS; gunakan domain GitHub Pages untuk sambungan sebenar.
-
-Video autoplay tanpa suara. Tekan Mulakan layar penuh pada TV. Ujian Google TV sebenar dan sambungan MySQL produksi masih diperlukan. GitHub Pages perlu diaktifkan pada repo.
-
-## Susun atur status TV
-
-PS Booking memaparkan semua station dalam grid enam lajur pada TV (12 station = dua baris), termasuk eRacing. Pada paparan menegak, grid menggunakan tiga lajur. Kad hanya memaparkan nombor station, jenis konsol, status dan baki masa. Kawalan ikon skrin penuh/tetapan muncul apabila remote, tetikus atau sentuhan digunakan, kemudian tersembunyi selepas 2.5 saat. Data ujian untuk semakan grid tidak disimpan dalam konfigurasi produksi.
-
-## APK Android TV
-
-Versi Android TV tersedia sebagai APK pemasangan terus. Lihat [panduan Android TV](android/README.md) untuk pemasangan, binaan dan keperluan peranti. Laman web kekal di GitHub Pages; aplikasi hanya membukanya dalam paparan TV.
+Semakan meliputi format pautan YouTube/Drive, penolakan URL luar yang tidak sah, konfigurasi tiga medan dan perlindungan konflik GitHub. Main balik YouTube dan akses imej sebenar bergantung pada pautan pemilik dan perlu disemak pada TV.

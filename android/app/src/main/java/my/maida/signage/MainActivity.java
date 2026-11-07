@@ -73,10 +73,11 @@ public class MainActivity extends Activity {
         setContentView(frame);
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return !allowed(request.getUrl());
+                return request.isForMainFrame() ? !allowed(request.getUrl()) : !allowedFrame(request.getUrl());
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return !allowed(Uri.parse(url));
+                Uri uri = Uri.parse(url);
+                return !allowed(uri) && !allowedFrame(uri);
             }
             @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap icon) {
                 failed = false;
@@ -106,6 +107,11 @@ public class MainActivity extends Activity {
         String path = uri.getPath();
         return "https".equals(uri.getScheme()) && "khan7-gif.github.io".equals(uri.getHost())
             && path != null && path.startsWith("/tv-signage/");
+    }
+    private boolean allowedFrame(Uri uri) {
+        String host = uri.getHost();
+        return "https".equals(uri.getScheme()) && ("www.youtube-nocookie.com".equals(host)
+            || "www.youtube.com".equals(host) || allowed(uri));
     }
     private void openHome() {
         handler.removeCallbacks(retry);
