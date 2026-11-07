@@ -1,4 +1,4 @@
-# Maida TV Signage — Android TV
+# Maida TV — Android TV
 
 Native Android TV WebView launcher for https://khan7-gif.github.io/tv-signage/ . Package: `my.maida.signage`. Android 6.0 (API 23) or newer with an up-to-date Android System WebView.
 
@@ -8,14 +8,14 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 
 ## Native logo update (1.2.0)
 
-Version 1.2.0 (versionCode 3) uses the supplied black, white and magenta Maida logo for the app icon and Android TV banner. The original image is packaged unchanged; the banner centers it without stretching. Package ID and playback behavior are unchanged. The workflow stages an unsigned APK in a draft release; sign with the existing release key before publishing an installable update. The download below remains the previous signed 1.1.0 until 1.2.0 is signed.
+Version 1.2.0 (versionCode 3) is named **Maida TV** and uses the supplied black, white and magenta Maida logo for the app icon and Android TV banner. The original image is packaged unchanged; the banner centers it without stretching. Package ID and playback behavior are unchanged. The workflow stages an unsigned APK in a draft release; sign with the existing release key before publishing an installable update. The download below remains the previous signed 1.1.0 until 1.2.0 is signed.
 
 ## Install
 
 1. Download [Maida TV Signage v1.1.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-Signage-v1.1.0.apk).
 2. Transfer it to the TV using USB or a file transfer app.
 3. Allow **Install unknown apps** for your file manager, open the APK and install.
-4. Open **Maida TV Signage** from Apps. Edit links and text from the website admin on a phone/computer.
+4. Open **Maida TV Signage** (1.1.0) or **Maida TV** (1.2.0) from Apps. Edit links and text from the website admin on a phone/computer.
 
 Updates use the same signing key and package ID. Install 1.1.0 over 1.0.0; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
 

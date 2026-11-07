@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         offline.setPadding(40, 40, 40, 40);
         offline.setBackgroundColor(Color.rgb(3, 12, 27));
         TextView message = new TextView(this);
-        message.setText("MAIDA TV SIGNAGE\n\nTiada sambungan ke signage.\nSemak Wi-Fi. Mencuba semula secara automatik.");
+        message.setText("MAIDA TV\n\nTiada sambungan ke signage.\nSemak Wi-Fi. Mencuba semula secara automatik.");
         message.setTextSize(22);
         message.setTextColor(Color.WHITE);
         message.setGravity(Gravity.CENTER);
@@ -138,7 +138,7 @@ public class MainActivity extends Activity {
     }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
-            new AlertDialog.Builder(this).setTitle("Maida TV Signage")
+            new AlertDialog.Builder(this).setTitle("Maida TV")
                 .setItems(new String[]{"Muat semula signage", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); })
                 .show();
             return true;
@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
     @Override public void onBackPressed() {
         if (fullscreenView != null) { closeFullscreen(); return; }
         if (web.canGoBack()) { web.goBack(); return; }
-        new AlertDialog.Builder(this).setMessage("Keluar daripada Maida TV Signage?")
+        new AlertDialog.Builder(this).setMessage("Keluar daripada Maida TV?")
             .setPositiveButton("Keluar", (dialog, which) -> finish())
             .setNegativeButton("Batal", (dialog, which) -> immersive()).show();
     }
