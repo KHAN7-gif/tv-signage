@@ -15,6 +15,11 @@
       "isNew": true
     },
     {
+      "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png",
+      "isNew": true
+    },
+    {
       "url": "https://youtu.be/mvcFt7IeKRQ?si=2tb4TW48DN6GT7Uy",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202309/0421/418704276d35ce02e8cb532c6ca3826cf866ad2ec66c0b17.png"
     },
@@ -36,6 +41,9 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202206/0300/E2vZwVaDJbhLZpJo7Q10IyYo.png"
     },
     {
+      "url": "https://www.youtube.com/watch?v=g37YWWc7TL4"
+    },
+    {
       "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png",
       "isNew": true
@@ -45,23 +53,15 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202608/1804/51aba58072e55f50d98061563deb9610226e0f18ba149787.png?w=440&thumb=false"
     },
     {
-      "url": "https://www.youtube.com/watch?v=g37YWWc7TL4"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=DFX7tzR65Mo&t=4s"
-    },
-    {
-      "url": "https://youtu.be/XCowAxPll4E?si=VVU8BYbH1v74WjhO"
-    },
-    {
-      "url": "https://youtu.be/MOclJJ7IpSY?si=g9ck-0dy6EOE7Dcp",
-      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202607/2322/78e0ba12f88a79c454b6b17d1638f2ae0b2943f1dbc98a17.png",
-      "isNew": true
     },
     {
       "url": "https://youtu.be/9ewiJJe_nYI?si=ZrDj6GRBp6NH27ZX",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202210/3121/Xz6kd2CORZxe8JnfNJwvA35A.png",
       "isNew": true
+    },
+    {
+      "url": "https://youtu.be/XCowAxPll4E?si=VVU8BYbH1v74WjhO"
     }
   ],
   "images": [
