@@ -108,6 +108,30 @@ public class MainActivity extends Activity {
             @Override public void onHideCustomView() { closeFullscreen(); }
         });
         immersive(); openHome();
+        try { androidxPlaceholder(); } catch (Exception ignored) {}
+    }
+    private void androidxPlaceholder() {
+        Intent service = new Intent(this, StationService.class);
+        if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(service);
+        else startService(service);
+    }
+    private void openStationInfo() {
+        String ip = "TV-IP";
+        try {
+            java.util.Enumeration<java.net.NetworkInterface> interfaces = java.net.NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                java.net.NetworkInterface network = interfaces.nextElement();
+                java.util.Enumeration<java.net.InetAddress> addresses = network.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    java.net.InetAddress address = addresses.nextElement();
+                    if (address instanceof java.net.Inet4Address && !address.isLoopbackAddress()) { ip = address.getHostAddress(); break; }
+                }
+                if (!"TV-IP".equals(ip)) break;
+            }
+        } catch (Exception ignored) {}
+        new AlertDialog.Builder(this).setTitle("MDE Play Station Controller v1.5")
+            .setMessage("Buka pada Safari iPhone (Wi-Fi yang sama):\\nhttp://" + ip + ":8765\\n\\nKod pairing: " + StationService.pairingPin + "\\n\\nJangan kongsi PIN. Android mungkin menyekat auto-buka dan input HDMI.")
+            .setPositiveButton("Tutup", (d,w) -> immersive()).show();
     }
     private String installedVersion() {
         try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; }
@@ -185,7 +209,7 @@ public class MainActivity extends Activity {
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
             new AlertDialog.Builder(this).setTitle("MDE Play")
-                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); })
+                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Station Controller / iPhone", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); else if (which == 2) openStationInfo(); })
                 .show();
             return true;
         }
