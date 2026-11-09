@@ -108,6 +108,41 @@ public class MainActivity extends Activity {
             @Override public void onHideCustomView() { closeFullscreen(); }
         });
         immersive(); openHome();
+        try { androidxPlaceholder(); } catch (Exception ignored) {}
+    }
+    private void androidxPlaceholder() {
+        Intent service = new Intent(this, StationService.class);
+        if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(service);
+        else startService(service);
+    }
+    private void chooseStationNumber() {
+        String[] choices = new String[12];
+        for (int i = 0; i < 12; i++) choices[i] = String.format(java.util.Locale.US, "Station %02d", i + 1);
+        int selected = getSharedPreferences("station", MODE_PRIVATE).getInt("number", 1) - 1;
+        new AlertDialog.Builder(this).setTitle("Tetapkan nombor Xiaomi TV")
+            .setSingleChoiceItems(choices, selected, (dialog, which) -> {
+                getSharedPreferences("station", MODE_PRIVATE).edit().putInt("number", which + 1).apply();
+                StationService.stationNumber = which + 1;
+                dialog.dismiss(); openStationInfo();
+            }).setNegativeButton("Batal", null).show();
+    }
+    private void openStationInfo() {
+        String ip = "TV-IP";
+        try {
+            java.util.Enumeration<java.net.NetworkInterface> interfaces = java.net.NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                java.net.NetworkInterface network = interfaces.nextElement();
+                java.util.Enumeration<java.net.InetAddress> addresses = network.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    java.net.InetAddress address = addresses.nextElement();
+                    if (address instanceof java.net.Inet4Address && !address.isLoopbackAddress()) { ip = address.getHostAddress(); break; }
+                }
+                if (!"TV-IP".equals(ip)) break;
+            }
+        } catch (Exception ignored) {}
+        new AlertDialog.Builder(this).setTitle("MDE Play Station Controller v1.5")
+            .setMessage("Buka pada Safari iPhone (Wi-Fi yang sama):\\nhttp://" + ip + ":8765\\n\\nKod pairing: " + StationService.pairingPin + "\\n\\nJangan kongsi PIN. Android mungkin menyekat auto-buka dan input HDMI.")
+            .setPositiveButton("Tutup", (d,w) -> immersive()).show();
     }
     private String installedVersion() {
         try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; }
@@ -185,7 +220,7 @@ public class MainActivity extends Activity {
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
             new AlertDialog.Builder(this).setTitle("MDE Play")
-                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); })
+                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Station Controller / iPhone", "Tetapkan Station 01-12", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); else if (which == 2) openStationInfo(); else if (which == 3) chooseStationNumber(); })
                 .show();
             return true;
         }
