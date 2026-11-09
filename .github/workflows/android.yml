@@ -32,7 +32,7 @@ jobs:
           APK_VERSION=$(sed -n "s/.*versionName '\([^']*\)'.*/\1/p" android/app/build.gradle)
           APK_TAG="android-v${APK_VERSION}"
           if ! gh release view "$APK_TAG" >/dev/null 2>&1; then
-            gh release create "$APK_TAG" --draft --title "Maida TV ${APK_VERSION}" --notes "APK signing in progress."
+            gh release create "$APK_TAG" --draft --title "MDE Play ${APK_VERSION}" --notes "APK signing in progress."
           fi
           if [ "$(gh release view "$APK_TAG" --json isDraft --jq .isDraft)" = true ]; then
             gh release upload "$APK_TAG" android/app/build/outputs/apk/release/app-release-unsigned.apk --clobber

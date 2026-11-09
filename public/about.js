@@ -16,7 +16,7 @@ async function check(){
   $('update-status').textContent=!latest?'Belum ada APK yang boleh dimuat turun.':!installed?`Versi tersedia: ${latest.version}`:compareVersions(latest.version,installed)>0?`Kemas kini tersedia: ${latest.version}`:`Anda menggunakan versi ${installed}. Tiada kemas kini lebih baharu yang tersedia.`;
   for(const release of releases){
    const card=document.createElement('article');card.className='release';
-   const title=document.createElement('h3');title.textContent=`Maida TV ${release.version}${release.version===installed?' · Dipasang':''}`;
+   const title=document.createElement('h3');title.textContent=`${release.name||`MDE Play ${release.version}`}${release.version===installed?' · Dipasang':''}`;
    const date=document.createElement('time');date.dateTime=release.published_at||'';date.textContent=release.published_at?new Date(release.published_at).toLocaleDateString('ms-MY'):'';
    const notes=document.createElement('p');notes.textContent=release.body||'Tiada nota keluaran.';card.append(title,date,notes);
    for(const apk of apkDownloads(release))card.append(link(`Muat turun APK ${release.version} ↗`,apk.url,'button-link download'));

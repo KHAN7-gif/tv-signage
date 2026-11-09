@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
         offline.setPadding(40, 40, 40, 40);
         offline.setBackgroundColor(Color.rgb(3, 12, 27));
         TextView message = new TextView(this);
-        message.setText("MAIDA TV\n\nTiada sambungan ke signage.\nSemak Wi-Fi. Mencuba semula secara automatik.");
+        message.setText("MDE PLAY\n\nTiada sambungan ke signage.\nSemak Wi-Fi. Mencuba semula secara automatik.");
         message.setTextSize(22);
         message.setTextColor(Color.WHITE);
         message.setGravity(Gravity.CENTER);
@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
         if (!isReleaseLink(uri)) return;
         try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); }
         catch (ActivityNotFoundException error) {
-            new AlertDialog.Builder(this).setTitle("Muat turun Maida TV")
+            new AlertDialog.Builder(this).setTitle("Muat turun MDE Play")
                 .setMessage("TV ini tiada browser untuk muat turun. Buka pautan ini pada telefon atau komputer dan pindahkan APK melalui USB:\n\n" + uri)
                 .setPositiveButton("Tutup", (dialog, which) -> immersive()).show();
         }
@@ -184,7 +184,7 @@ public class MainActivity extends Activity {
     }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
-            new AlertDialog.Builder(this).setTitle("Maida TV")
+            new AlertDialog.Builder(this).setTitle("MDE Play")
                 .setItems(new String[]{"Muat semula signage", "About / Update APK", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); })
                 .show();
             return true;
@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
     @Override public void onBackPressed() {
         if (fullscreenView != null) { closeFullscreen(); return; }
         if (web.canGoBack()) { web.goBack(); return; }
-        new AlertDialog.Builder(this).setMessage("Keluar daripada Maida TV?")
+        new AlertDialog.Builder(this).setMessage("Keluar daripada MDE Play?")
             .setPositiveButton("Keluar", (dialog, which) -> finish())
             .setNegativeButton("Batal", (dialog, which) -> immersive()).show();
     }
