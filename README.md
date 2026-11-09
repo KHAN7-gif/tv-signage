@@ -1,4 +1,4 @@
-# Maida TV Signage
+# MDE Play
 
 Paparan TV mengandungi **tiga komponen sahaja**:
 
@@ -55,7 +55,7 @@ Buka ikon ⓘ di paparan TV atau pautan **About / Update APK** di admin untuk me
 
 ## Android TV
 
-Lihat [panduan Android TV](android/README.md). Aplikasi membuka URL GitHub Pages dan memerlukan internet serta Android System WebView yang dikemas kini. APK 1.3.0 menggunakan logo Maida TV baharu berlatar gelap dengan menu About / Update APK. Muat turun melalui About; pasang terus menggantikan APK lama tanpa uninstall.
+Lihat [panduan Android TV](android/README.md). Aplikasi membuka URL GitHub Pages dan memerlukan internet serta Android System WebView yang dikemas kini. APK 1.4.0 menggunakan nama **MDE Play** dan logo magenta baharu dengan menu About / Update APK. Muat turun melalui About; pasang terus menggantikan APK lama tanpa uninstall.
 
 ## Development dan semakan
 

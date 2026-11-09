@@ -1,10 +1,14 @@
-# Maida TV — Android TV
+# MDE Play — Android TV
 
 Native Android TV WebView launcher for https://khan7-gif.github.io/tv-signage/ . Package: `my.maida.signage`. Android 6.0 (API 23) or newer with an up-to-date Android System WebView.
 
 The website displays a YouTube video, a public Google Drive image and scrolling text. The app keeps the screen awake, uses landscape fullscreen and supports TV remote navigation. Menu reloads the website; Back confirms exit. If the website fails to load, a native retry screen appears.
 
 **Version 1.1.0** permits embedded YouTube navigation while keeping main-frame navigation restricted to this signage site. Video and image links are entered on the website admin panel. Media is not packaged into the APK. Internet is required. The app does not start automatically at TV boot.
+
+## Native update (1.4.0)
+
+Version 1.4.0 (versionCode 5) renames the app to **MDE Play** and uses the supplied magenta MDE Play artwork for the TV banner and app icon. Package ID `my.maida.signage`, original signing certificate and signage content are unchanged. Install as an update to Maida TV without uninstalling. Earlier release descriptions below retain their original branding for history.
 
 ## Native update (1.3.0)
 
@@ -20,12 +24,12 @@ Press Menu on the TV remote and select **About / Update APK**, or select the ⓘ
 
 ## Install
 
-1. Download [Maida TV v1.3.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-v1.3.0.apk).
+1. Download [MDE Play v1.4.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/MDE-Play-v1.4.0.apk).
 2. Transfer it to the TV using USB or a file transfer app.
 3. Allow **Install unknown apps** for your file manager, open the APK and install.
-4. Open **Maida TV** from Apps. Edit links and text from the website admin on a phone/computer.
+4. Open **MDE Play** from Apps. Edit links and text from the website admin on a phone/computer.
 
-Updates use the same signing key and package ID. Install 1.3.0 over earlier versions; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
+Updates use the same signing key and package ID. Install 1.4.0 over earlier Maida TV versions; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
 
 ## Build and signing
 

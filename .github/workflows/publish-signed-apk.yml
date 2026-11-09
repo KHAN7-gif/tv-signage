@@ -27,7 +27,7 @@ jobs:
           set -euo pipefail
           APK_VERSION=$(sed -n "s/.*versionName '\([^']*\)'.*/\1/p" android/app/build.gradle)
           [[ "$APK_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          APK_PATH="public/downloads/Maida-TV-v${APK_VERSION}.apk"
+          APK_PATH="public/downloads/MDE-Play-v${APK_VERSION}.apk"
           (cd public/downloads && sha256sum -c SHA256SUMS.txt)
           "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 "$APK_PATH"
           CERT=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$APK_PATH")
