@@ -16,7 +16,7 @@ Status: **source-code preview / not yet a signed or TV-tested APK**.
 - END SESSION: records WAITING; choose 1, 3, 5, or 10 minutes
 - DISPLAY NOW: attempts to foreground MDE Play
 - Live station status; wrong PIN throttling; no credentials in GitHub Pages
-- One TV/server represents one station; browser can bookmark multiple TV addresses
+- One TV/server represents one station; a fleet landing page on any station at `http://TV_IP:8765/fleet` links to up to 12 TV controllers
 
 ## Limitations and security
 **IMPORTANT:** Android TV normally does not grant ordinary third-party apps access to force HDMI input selection. START SESSION currently only records the state; staff must use the Xiaomi remote to select HDMI. Android 10+ may block launching the app from a background service, meaning DISPLAY NOW / timer expiry can require staff to reopen MDE Play from the TV notification or remote. Do not advertise this build as full HDMI automation. Avoid changing source inputs while customers are playing.
@@ -34,3 +34,15 @@ This is a LAN-only HTTP prototype (not TLS). Only connect it to a trusted privat
 
 ## Release
 Do not publish `android-v1.5.0` or replace the signed v1.4.1 release until Android build, physical TV testing, and production signing have succeeded. The original release keystore is required to upgrade the existing APK without uninstalling.
+
+## 12 PlayStation stations (fleet)
+1. Install the same v1.5 APK on each of the 12 Xiaomi TVs (after release build and signing).
+2. On each TV: remote **Menu → Tetapkan Station 01-12**, select unique station number. This is stored on that TV.
+3. In TV **Menu → Station Controller / iPhone**, note its LAN IP and six-digit PIN.
+4. On iPhone Safari, visit `http://<any-TV-IP>:8765/fleet` and enter the 12 private IPv4 addresses. Safari stores IPs locally on that iPhone, not in the public GitHub repo.
+5. Tap **Buka Controller** on any station card. Pair with that TV's PIN; use Start Session / End Session / timer.
+6. Keep fixed DHCP reservations in the router, preferably a restricted staff VLAN.
+
+The fleet landing page is a navigation dashboard, **not yet a consolidated live 12-TV monitoring and remote-control API**. Each card opens the selected TV's own secured controller. This intentionally avoids browser CORS and exposing PINs centrally. A future unified status/control dashboard requires a properly authenticated hub service, not an insecure public GitHub Pages controller.
+
+The TV numbering is independent of the IP's last octet; never assume Station 01 is .101, etc. Any example address displayed in the UI is only a placeholder.
