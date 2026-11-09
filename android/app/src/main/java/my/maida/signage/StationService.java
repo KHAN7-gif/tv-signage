@@ -85,7 +85,7 @@ public final class StationService extends Service {
           +"<header><h2>MDE <b>PLAY</b></h2><small>STATION " + String.format(java.util.Locale.US, "%02d", stationNumber) + " · v1.5</small></header><p><a style='color:#f69fd0' href='/fleet'>12 Station Dashboard →</a></p>"
           +"<div class='card'><small>XIAOMI TV · STATUS</small><div class='status' id='status'>CONNECTING</div><p id='detail'>Menyambung...</p></div>"
           +"<div class='card'><label>Kod pairing (lihat Menu di TV)</label><input id='pin' inputmode='numeric' maxlength='6' type='password' placeholder='6-digit PIN' autocomplete='off'>"
-          +"<label>Auto Display Delay</label><select id='delay' style='width:100%;padding:14px;background:#111;color:white;border-radius:12px'><option value='1'>1 minit</option><option value='3'>3 minit</option><option value='5' selected>5 minit</option><option value='10'>10 minit</option></select>"
+          +"<label>Auto Display Delay</label><select id='delay' style='width:100%;padding:14px;background:#111;color:white;border-radius:12px'><option value='1' selected>1 minit</option><option value='3'>3 minit</option><option value='5'>5 minit</option><option value='10'>10 minit</option></select>"
           +"<button onclick=\"cmd('end')\">END SESSION · MULAKAN TIMER</button><button class='alt' onclick=\"cmd('start')\">START SESSION · BATAL TIMER</button><button class='alt' onclick=\"cmd('display')\">BUKA MDE PLAY SEKARANG</button><p id='notice'></p></div>"
           +"<p><small>START menandakan sesi aktif tetapi pertukaran HDMI automatik tidak tersedia kepada aplikasi Android biasa. Gunakan remote Input TV jika diperlukan. Jangan dedahkan kod pairing.</small></p>"
           +"<script>let pin='';async function cmd(action){pin=document.getElementById('pin').value.trim();try{const r=await fetch('/api/'+action,{method:'POST',headers:{'Content-Type':'application/json','X-Station-Pin':pin},body:JSON.stringify({delay:Number(document.getElementById('delay').value)})});const v=await r.json();document.getElementById('notice').textContent=v.message||v.error||'Selesai';refresh()}catch(e){document.getElementById('notice').textContent='Sambungan gagal'}}"
@@ -157,8 +157,8 @@ public final class StationService extends Service {
                         state="PLAYING";deadline=0;
                         message="Sesi aktif. Pilih input HDMI PlayStation dengan remote jika diperlukan.";
                     } else if ("end".equals(action)) {
-                        int mins=5;try{mins=new JSONObject(body).optInt("delay",5);}catch(Exception ignored){}
-                        mins=(mins==1||mins==3||mins==5||mins==10)?mins:5;
+                        int mins=1;try{mins=new JSONObject(body).optInt("delay",1);}catch(Exception ignored){}
+                        mins=(mins==1||mins==3||mins==5||mins==10)?mins:1;
                         deadline=System.currentTimeMillis()+mins*60000L;
                         state="WAITING"; message="Timer berjalan.";
                     } else if ("display".equals(action)) {
