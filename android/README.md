@@ -6,6 +6,10 @@ The website displays a YouTube video, a public Google Drive image and scrolling 
 
 **Version 1.1.0** permits embedded YouTube navigation while keeping main-frame navigation restricted to this signage site. Video and image links are entered on the website admin panel. Media is not packaged into the APK. Internet is required. The app does not start automatically at TV boot.
 
+## Native update (1.3.0)
+
+Version 1.3.0 (versionCode 4) uses the approved dark Maida emblem + tv branding with a subtle iridescent finish. The Android TV banner fills the 16:9 launcher tile; the square app icon centers the same artwork without cropping. The package ID, original signing key, app name, remote controls, website URL and all signage content are unchanged. Install directly over earlier versions without uninstalling.
+
 ## Native update (1.2.0)
 
 Version 1.2.0 (versionCode 3) is named **Maida TV** and uses the supplied black, white and magenta logo for the app icon and Android TV banner. The original image is packaged unchanged. The release adds About / Update APK with installed-version reporting and manual update links. It uses the same package ID and original release signing key as 1.1.0; install directly over the old APK without uninstalling.
@@ -16,12 +20,12 @@ Press Menu on the TV remote and select **About / Update APK**, or select the ⓘ
 
 ## Install
 
-1. Download [Maida TV v1.2.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-v1.2.0.apk).
+1. Download [Maida TV v1.3.0 APK](https://khan7-gif.github.io/tv-signage/public/downloads/Maida-TV-v1.3.0.apk).
 2. Transfer it to the TV using USB or a file transfer app.
 3. Allow **Install unknown apps** for your file manager, open the APK and install.
 4. Open **Maida TV** from Apps. Edit links and text from the website admin on a phone/computer.
 
-Updates use the same signing key and package ID. Install 1.2.0 over 1.1.0 or 1.0.0; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
+Updates use the same signing key and package ID. Install 1.3.0 over earlier versions; no uninstall is needed. The TV player requests autoplay with audio. If blocked, select Aktifkan audio on the TV. Admin previews remain muted. YouTube embedding, ads and availability are controlled by YouTube and each video's owner. Test your chosen links on the actual TV.
 
 ## Build and signing
 
