@@ -115,6 +115,17 @@ public class MainActivity extends Activity {
         if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(service);
         else startService(service);
     }
+    private void chooseStationNumber() {
+        String[] choices = new String[12];
+        for (int i = 0; i < 12; i++) choices[i] = String.format(java.util.Locale.US, "Station %02d", i + 1);
+        int selected = getSharedPreferences("station", MODE_PRIVATE).getInt("number", 1) - 1;
+        new AlertDialog.Builder(this).setTitle("Tetapkan nombor Xiaomi TV")
+            .setSingleChoiceItems(choices, selected, (dialog, which) -> {
+                getSharedPreferences("station", MODE_PRIVATE).edit().putInt("number", which + 1).apply();
+                StationService.stationNumber = which + 1;
+                dialog.dismiss(); openStationInfo();
+            }).setNegativeButton("Batal", null).show();
+    }
     private void openStationInfo() {
         String ip = "TV-IP";
         try {
@@ -209,7 +220,7 @@ public class MainActivity extends Activity {
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
             new AlertDialog.Builder(this).setTitle("MDE Play")
-                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Station Controller / iPhone", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); else if (which == 2) openStationInfo(); })
+                .setItems(new String[]{"Muat semula signage", "About / Update APK", "Station Controller / iPhone", "Tetapkan Station 01-12", "Tutup"}, (dialog, which) -> { if (which == 0) openHome(); else if (which == 1) openAbout(); else if (which == 2) openStationInfo(); else if (which == 3) chooseStationNumber(); })
                 .show();
             return true;
         }
