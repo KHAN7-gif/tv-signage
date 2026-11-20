@@ -47,11 +47,6 @@
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202206/0300/E2vZwVaDJbhLZpJo7Q10IyYo.png"
     },
     {
-      "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9",
-      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png",
-      "isNew": true
-    },
-    {
       "url": "https://www.youtube.com/watch?v=DFX7tzR65Mo&t=4s"
     },
     {
@@ -61,6 +56,11 @@
     {
       "url": "https://youtu.be/9ewiJJe_nYI?si=ZrDj6GRBp6NH27ZX",
       "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202210/3121/Xz6kd2CORZxe8JnfNJwvA35A.png",
+      "isNew": true
+    },
+    {
+      "url": "https://youtu.be/QdBZY2fkU-0?si=U6QuPCNyYxpEBHm9",
+      "coverUrl": "https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png",
       "isNew": true
     }
   ],
